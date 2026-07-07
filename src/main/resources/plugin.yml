@@ -1,0 +1,147 @@
+name: WeGuardian
+version: '2.4'
+main: me.wethink.weguardian.WeGuardian
+api-version: '1.21'
+authors: [ WeThink ]
+description: Professional punishment management system for Minecraft servers
+folia-supported: true
+load: STARTUP
+
+commands:
+  ban:
+    description: Permanently ban a player
+    usage: /ban <player> [reason]
+    permission: weguardian.ban
+  tempban:
+    description: Temporarily ban a player
+    usage: /tempban <player> <duration> [reason]
+    permission: weguardian.tempban
+  unban:
+    description: Unban a player
+    usage: /unban <player>
+    permission: weguardian.unban
+  banip:
+    description: Permanently IP ban a player (auto-resolves IP)
+    usage: /banip <player> [reason]
+    permission: weguardian.banip
+  tempbanip:
+    description: Temporarily IP ban a player (auto-resolves IP)
+    usage: /tempbanip <player> <duration> [reason]
+    permission: weguardian.tempbanip
+  unbanip:
+    description: Unban a player's IP (auto-resolves IP)
+    usage: /unbanip <player>
+    permission: weguardian.unbanip
+  mute:
+    description: Permanently mute a player
+    usage: /mute <player> [reason]
+    permission: weguardian.mute
+  tempmute:
+    description: Temporarily mute a player
+    usage: /tempmute <player> <duration> [reason]
+    permission: weguardian.tempmute
+  unmute:
+    description: Unmute a player
+    usage: /unmute <player>
+    permission: weguardian.unmute
+  muteip:
+    description: Permanently IP mute a player (auto-resolves IP)
+    usage: /muteip <player> [reason]
+    permission: weguardian.muteip
+  tempmuteip:
+    description: Temporarily IP mute a player (auto-resolves IP)
+    usage: /tempmuteip <player> <duration> [reason]
+    permission: weguardian.tempmuteip
+  unmuteip:
+    description: Unmute a player's IP (auto-resolves IP)
+    usage: /unmuteip <player>
+    permission: weguardian.unmuteip
+  kick:
+    description: Kick a player from the server
+    usage: /kick <player> [reason]
+    permission: weguardian.kick
+  punish:
+    description: Open the punishment GUI for a player
+    usage: /punish <player>
+    permission: weguardian.punish
+  history:
+    description: View punishment history
+    usage: /history <player>
+    permission: weguardian.history
+  weguardian:
+    description: WeGuardian admin commands
+    usage: /weguardian <reload>
+    permission: weguardian.admin
+    aliases: [wg]
+
+permissions:
+  weguardian.ban:
+    description: Allows permanent banning
+    default: op
+  weguardian.tempban:
+    description: Allows temporary banning
+    default: op
+  weguardian.unban:
+    description: Allows unbanning players
+    default: op
+  weguardian.banip:
+    description: Allows permanent IP banning
+    default: op
+  weguardian.tempbanip:
+    description: Allows temporary IP banning
+    default: op
+  weguardian.unbanip:
+    description: Allows unbanning IPs
+    default: op
+  weguardian.mute:
+    description: Allows permanent muting
+    default: op
+  weguardian.tempmute:
+    description: Allows temporary muting
+    default: op
+  weguardian.unmute:
+    description: Allows unmuting players
+    default: op
+  weguardian.muteip:
+    description: Allows permanent IP muting
+    default: op
+  weguardian.tempmuteip:
+    description: Allows temporary IP muting
+    default: op
+  weguardian.unmuteip:
+    description: Allows unmuting IPs
+    default: op
+  weguardian.kick:
+    description: Allows kicking players
+    default: op
+  weguardian.punish:
+    description: Allows using punishment GUI
+    default: op
+  weguardian.history:
+    description: Allows viewing punishment history
+    default: op
+  weguardian.admin:
+    description: Admin commands (reload, etc.)
+    default: op
+  weguardian.bypass:
+    description: Bypass all punishments
+    default: false
+  weguardian.staff:
+    description: All staff permissions
+    default: op
+    children:
+      weguardian.ban: true
+      weguardian.tempban: true
+      weguardian.unban: true
+      weguardian.banip: true
+      weguardian.tempbanip: true
+      weguardian.unbanip: true
+      weguardian.mute: true
+      weguardian.tempmute: true
+      weguardian.unmute: true
+      weguardian.muteip: true
+      weguardian.tempmuteip: true
+      weguardian.unmuteip: true
+      weguardian.kick: true
+      weguardian.punish: true
+      weguardian.history: true
