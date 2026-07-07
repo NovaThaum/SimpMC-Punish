@@ -1,6 +1,6 @@
-# SimpBan 2.4 Decompiled Source
+# SimpBan 1.0 Decompiled Source
 
-This repository contains a reconstructed Maven project decompiled from `simpban-2.4.jar`.
+This repository contains a reconstructed Maven project decompiled from `simpban-1.0.jar`.
 
 Authors: GPT5.5, Minecraft0122, SimpFun
 
@@ -13,7 +13,7 @@ mvn package
 The shaded plugin JAR is produced at:
 
 ```text
-target/simpban-2.4.jar
+target/simpban-1.0.jar
 ```
 
 ## Notes

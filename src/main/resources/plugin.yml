@@ -1,5 +1,5 @@
 name: SimpBan
-version: '2.4'
+version: '1.0'
 main: me.simpfun.simpban.SimpBan
 api-version: '1.21'
 authors: [ GPT5.5, Minecraft0122, SimpFun ]

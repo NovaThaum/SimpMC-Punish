@@ -6,7 +6,7 @@
 
     <groupId>me.simpfun</groupId>
     <artifactId>simpban</artifactId>
-    <version>2.4</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>SimpBan</name>
