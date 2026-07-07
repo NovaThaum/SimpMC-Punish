@@ -1,39 +1,31 @@
-#  __        __     _____                      _ _
-#  \ \        / /    / ____|                    | (_)
-#   \ \  /\  / /___ | |  __ _   _  __ _ _ __ __| |_  __ _ _ __
-#    \ \/  \/ // _ \| | |_ | | | |/ _` | '__/ _` | |/ _` | '_ \
-#     \  /\  /|  __/| |__| | |_| | (_| | | | (_| | | (_| | | | |
-#      \/  \/  \___| \_____|\__,_|\__,_|_|  \__,_|_|\__,_|_| |_|
-#
-#  Professional Punishment Management System v2.0
-#  by WeThink
-#
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# SimpBan
+# Professional Punishment Management System v2.4
+# Authors: GPT5.5, Minecraft0122, SimpFun
 
 # Bypass Configuration
-# Players with the weguardian.bypass permission will bypass all punishments
-# Permission: weguardian.bypass - Bypasses bans, mutes, and kicks
+# Players with the simpban.bypass permission will bypass all punishments
+# Permission: simpban.bypass - Bypasses bans, mutes, and kicks
 bypass:
-  permission: "weguardian.bypass"
+  permission: "simpban.bypass"
 
 # Database Configuration
 database:
   type: "sqlite"
-  
+
   sqlite:
     file: "punishments.db"
-  
+
   mysql:
     host: "localhost"
     port: 3306
-    database: "weguardian"
+    database: "simpban"
     username: "root"
     password: "password"
     properties:
       useSSL: false
       autoReconnect: true
       characterEncoding: "utf8"
-  
+
   pool-size: 5
 
 # Cache Configuration
@@ -61,19 +53,17 @@ discord:
   webhook-url: "YOUR_WEBHOOK_URL_HERE"
   batch-interval-seconds: 5
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Web Dashboard Configuration
 # Embedded web panel for viewing and managing punishments
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 web-dashboard:
   enabled: false
-  
+
   host: "0.0.0.0"
   port: 8080
-  
+
   branding:
     server-name: "My Server"
     accent-color: "#ff5555"
-    footer-text: "Powered by WeGuardian"
-  
+    footer-text: "Powered by SimpBan"
+
   admin-api-key: "CHANGE-ME-TO-A-SECURE-KEY"

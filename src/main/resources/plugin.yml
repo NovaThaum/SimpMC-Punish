@@ -1,8 +1,8 @@
-name: WeGuardian
+name: SimpBan
 version: '2.4'
-main: me.wethink.weguardian.WeGuardian
+main: me.simpfun.simpban.SimpBan
 api-version: '1.21'
-authors: [ WeThink ]
+authors: [ GPT5.5, Minecraft0122, SimpFun ]
 description: Professional punishment management system for Minecraft servers
 folia-supported: true
 load: STARTUP
@@ -11,137 +11,141 @@ commands:
   ban:
     description: Permanently ban a player
     usage: /ban <player> [reason]
-    permission: weguardian.ban
+    permission: simpban.ban
   tempban:
     description: Temporarily ban a player
     usage: /tempban <player> <duration> [reason]
-    permission: weguardian.tempban
+    permission: simpban.tempban
   unban:
     description: Unban a player
     usage: /unban <player>
-    permission: weguardian.unban
+    permission: simpban.unban
   banip:
     description: Permanently IP ban a player (auto-resolves IP)
     usage: /banip <player> [reason]
-    permission: weguardian.banip
+    permission: simpban.banip
   tempbanip:
     description: Temporarily IP ban a player (auto-resolves IP)
     usage: /tempbanip <player> <duration> [reason]
-    permission: weguardian.tempbanip
+    permission: simpban.tempbanip
   unbanip:
     description: Unban a player's IP (auto-resolves IP)
     usage: /unbanip <player>
-    permission: weguardian.unbanip
+    permission: simpban.unbanip
   mute:
     description: Permanently mute a player
     usage: /mute <player> [reason]
-    permission: weguardian.mute
+    permission: simpban.mute
   tempmute:
     description: Temporarily mute a player
     usage: /tempmute <player> <duration> [reason]
-    permission: weguardian.tempmute
+    permission: simpban.tempmute
   unmute:
     description: Unmute a player
     usage: /unmute <player>
-    permission: weguardian.unmute
+    permission: simpban.unmute
   muteip:
     description: Permanently IP mute a player (auto-resolves IP)
     usage: /muteip <player> [reason]
-    permission: weguardian.muteip
+    permission: simpban.muteip
   tempmuteip:
     description: Temporarily IP mute a player (auto-resolves IP)
     usage: /tempmuteip <player> <duration> [reason]
-    permission: weguardian.tempmuteip
+    permission: simpban.tempmuteip
   unmuteip:
     description: Unmute a player's IP (auto-resolves IP)
     usage: /unmuteip <player>
-    permission: weguardian.unmuteip
+    permission: simpban.unmuteip
   kick:
     description: Kick a player from the server
     usage: /kick <player> [reason]
-    permission: weguardian.kick
+    permission: simpban.kick
   punish:
     description: Open the punishment GUI for a player
     usage: /punish <player>
-    permission: weguardian.punish
+    permission: simpban.punish
   history:
     description: View punishment history
     usage: /history <player>
-    permission: weguardian.history
-  weguardian:
-    description: WeGuardian admin commands
-    usage: /weguardian <reload>
-    permission: weguardian.admin
-    aliases: [wg]
+    permission: simpban.history
+  simpban:
+    description: SimpBan admin commands
+    usage: /simpban <reload>
+    permission: simpban.admin
+    aliases: [sb]
 
 permissions:
-  weguardian.ban:
+  simpban.ban:
     description: Allows permanent banning
     default: op
-  weguardian.tempban:
+  simpban.tempban:
     description: Allows temporary banning
     default: op
-  weguardian.unban:
+  simpban.unban:
     description: Allows unbanning players
     default: op
-  weguardian.banip:
+  simpban.banip:
     description: Allows permanent IP banning
     default: op
-  weguardian.tempbanip:
+  simpban.tempbanip:
     description: Allows temporary IP banning
     default: op
-  weguardian.unbanip:
+  simpban.unbanip:
     description: Allows unbanning IPs
     default: op
-  weguardian.mute:
+  simpban.mute:
     description: Allows permanent muting
     default: op
-  weguardian.tempmute:
+  simpban.tempmute:
     description: Allows temporary muting
     default: op
-  weguardian.unmute:
+  simpban.unmute:
     description: Allows unmuting players
     default: op
-  weguardian.muteip:
+  simpban.muteip:
     description: Allows permanent IP muting
     default: op
-  weguardian.tempmuteip:
+  simpban.tempmuteip:
     description: Allows temporary IP muting
     default: op
-  weguardian.unmuteip:
+  simpban.unmuteip:
     description: Allows unmuting IPs
     default: op
-  weguardian.kick:
+  simpban.kick:
     description: Allows kicking players
     default: op
-  weguardian.punish:
+  simpban.punish:
     description: Allows using punishment GUI
     default: op
-  weguardian.history:
+  simpban.history:
     description: Allows viewing punishment history
     default: op
-  weguardian.admin:
+  simpban.admin:
     description: Admin commands (reload, etc.)
     default: op
-  weguardian.bypass:
+  simpban.help:
+    description: Allows viewing SimpBan help
+    default: op
+  simpban.bypass:
     description: Bypass all punishments
     default: false
-  weguardian.staff:
+  simpban.staff:
     description: All staff permissions
     default: op
     children:
-      weguardian.ban: true
-      weguardian.tempban: true
-      weguardian.unban: true
-      weguardian.banip: true
-      weguardian.tempbanip: true
-      weguardian.unbanip: true
-      weguardian.mute: true
-      weguardian.tempmute: true
-      weguardian.unmute: true
-      weguardian.muteip: true
-      weguardian.tempmuteip: true
-      weguardian.unmuteip: true
-      weguardian.kick: true
-      weguardian.punish: true
-      weguardian.history: true
+      simpban.ban: true
+      simpban.tempban: true
+      simpban.unban: true
+      simpban.banip: true
+      simpban.tempbanip: true
+      simpban.unbanip: true
+      simpban.mute: true
+      simpban.tempmute: true
+      simpban.unmute: true
+      simpban.muteip: true
+      simpban.tempmuteip: true
+      simpban.unmuteip: true
+      simpban.kick: true
+      simpban.punish: true
+      simpban.history: true
+      simpban.help: true

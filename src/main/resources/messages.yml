@@ -1,4 +1,4 @@
-prefix: "&8[&c&lWeGuardian&8]&r "
+prefix: "&8[&c&lSimpBan&8]&r "
 
 punishments:
   ban:
@@ -304,7 +304,7 @@ gui:
 input:
   reason:
     header: "&8&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    title: "&c&lWeGuardian &8» &fEnter Punishment Reason"
+    title: "&c&lSimpBan &8» &fEnter Punishment Reason"
     target: "&7Target: &e{player}"
     type: "&7Type: {type}"
     duration: "&7Duration: &f{duration}"
@@ -317,7 +317,7 @@ input:
 
   custom-duration:
     header: "&8&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    title: "&c&lWeGuardian &8» &fEnter Custom Duration"
+    title: "&c&lSimpBan &8» &fEnter Custom Duration"
     format-header: "&7Format examples:"
     formats:
       - "&7  &e1h &7= 1 hour"

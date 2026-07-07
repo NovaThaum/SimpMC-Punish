@@ -4,13 +4,25 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>me.wethink</groupId>
-    <artifactId>weguardian</artifactId>
+    <groupId>me.simpfun</groupId>
+    <artifactId>simpban</artifactId>
     <version>2.4</version>
     <packaging>jar</packaging>
 
-    <name>WeGuardian</name>
+    <name>SimpBan</name>
     <description>Professional punishment management system for Minecraft servers</description>
+
+    <developers>
+        <developer>
+            <name>GPT5.5</name>
+        </developer>
+        <developer>
+            <name>Minecraft0122</name>
+        </developer>
+        <developer>
+            <name>SimpFun</name>
+        </developer>
+    </developers>
 
     <properties>
         <java.version>21</java.version>
@@ -47,51 +59,46 @@
                         <!-- FoliaLib -->
                         <relocation>
                             <pattern>com.tcoded.folialib</pattern>
-                            <shadedPattern>me.wethink.weguardian.lib.folialib</shadedPattern>
+                            <shadedPattern>me.simpfun.simpban.lib.folialib</shadedPattern>
                         </relocation>
                         <!-- Caffeine -->
                         <relocation>
                             <pattern>com.github.benmanes.caffeine</pattern>
-                            <shadedPattern>me.wethink.weguardian.lib.caffeine</shadedPattern>
+                            <shadedPattern>me.simpfun.simpban.lib.caffeine</shadedPattern>
                         </relocation>
                         <!-- HikariCP -->
                         <relocation>
                             <pattern>com.zaxxer.hikari</pattern>
-                            <shadedPattern>me.wethink.weguardian.lib.hikari</shadedPattern>
+                            <shadedPattern>me.simpfun.simpban.lib.hikari</shadedPattern>
                         </relocation>
                         <!-- ACF -->
                         <relocation>
                             <pattern>co.aikar.commands</pattern>
-                            <shadedPattern>me.wethink.weguardian.lib.acf</shadedPattern>
+                            <shadedPattern>me.simpfun.simpban.lib.acf</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.locales</pattern>
-                            <shadedPattern>me.wethink.weguardian.lib.locales</shadedPattern>
+                            <shadedPattern>me.simpfun.simpban.lib.locales</shadedPattern>
                         </relocation>
                         <!-- FastInv -->
                         <relocation>
                             <pattern>fr.mrmicky.fastinv</pattern>
-                            <shadedPattern>me.wethink.weguardian.lib.fastinv</shadedPattern>
-                        </relocation>
-                        <!-- bStats -->
-                        <relocation>
-                            <pattern>org.bstats</pattern>
-                            <shadedPattern>me.wethink.weguardian.lib.bstats</shadedPattern>
+                            <shadedPattern>me.simpfun.simpban.lib.fastinv</shadedPattern>
                         </relocation>
                         <!-- Javalin -->
                         <relocation>
                             <pattern>io.javalin</pattern>
-                            <shadedPattern>me.wethink.weguardian.lib.javalin</shadedPattern>
+                            <shadedPattern>me.simpfun.simpban.lib.javalin</shadedPattern>
                         </relocation>
                         <!-- Jetty -->
                         <relocation>
                             <pattern>org.eclipse.jetty</pattern>
-                            <shadedPattern>me.wethink.weguardian.lib.jetty</shadedPattern>
+                            <shadedPattern>me.simpfun.simpban.lib.jetty</shadedPattern>
                         </relocation>
                         <!-- Gson -->
                         <relocation>
                             <pattern>com.google.gson</pattern>
-                            <shadedPattern>me.wethink.weguardian.lib.gson</shadedPattern>
+                            <shadedPattern>me.simpfun.simpban.lib.gson</shadedPattern>
                         </relocation>
                     </relocations>
                     <filters>
@@ -208,14 +215,6 @@
             <groupId>com.github.MrMicky-FR</groupId>
             <artifactId>FastInv</artifactId>
             <version>3.1.2</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- bStats - Plugin metrics -->
-        <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>3.0.2</version>
             <scope>compile</scope>
         </dependency>
 

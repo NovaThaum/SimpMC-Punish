@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - WeGuardian</title>
+    <title>Admin Panel - SimpBan</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -125,7 +125,7 @@
                 <div class="logo">
                     <div class="logo-icon">⚔️</div>
                     <div class="logo-text">
-                        <h1 id="server-name">WeGuardian</h1>
+                        <h1 id="server-name">SimpBan</h1>
                         <span class="subtitle">Admin Panel</span>
                     </div>
                 </div>
@@ -227,13 +227,13 @@
 
 
         <footer class="footer">
-            <p id="footer-text">Powered by WeGuardian</p>
+            <p id="footer-text">Powered by SimpBan</p>
         </footer>
     </div>
 
     <script>
         const API_BASE = window.location.origin;
-        let apiKey = localStorage.getItem('weguardian_api_key') || '';
+        let apiKey = localStorage.getItem('simpban_api_key') || '';
 
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
@@ -298,7 +298,7 @@
                 });
 
                 if (response.ok) {
-                    localStorage.setItem('weguardian_api_key', apiKey);
+                    localStorage.setItem('simpban_api_key', apiKey);
                     document.getElementById('auth-section').style.display = 'none';
                     document.getElementById('admin-panel').style.display = 'block';
                     document.getElementById('auth-error').style.display = 'none';
