@@ -4,13 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>me.simpfun</groupId>
+    <groupId>me.simpmc</groupId>
     <artifactId>simpban</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>SimpBan</name>
-    <description>Professional punishment management system for Minecraft servers</description>
+    <description>面向 Minecraft 服务器的专业处罚管理插件</description>
 
     <developers>
         <developer>
@@ -20,7 +20,7 @@
             <name>Minecraft0122</name>
         </developer>
         <developer>
-            <name>SimpFun</name>
+            <name>SimpMC</name>
         </developer>
     </developers>
 
@@ -59,46 +59,31 @@
                         <!-- FoliaLib -->
                         <relocation>
                             <pattern>com.tcoded.folialib</pattern>
-                            <shadedPattern>me.simpfun.simpban.lib.folialib</shadedPattern>
+                            <shadedPattern>me.simpmc.simpban.lib.folialib</shadedPattern>
                         </relocation>
                         <!-- Caffeine -->
                         <relocation>
                             <pattern>com.github.benmanes.caffeine</pattern>
-                            <shadedPattern>me.simpfun.simpban.lib.caffeine</shadedPattern>
+                            <shadedPattern>me.simpmc.simpban.lib.caffeine</shadedPattern>
                         </relocation>
                         <!-- HikariCP -->
                         <relocation>
                             <pattern>com.zaxxer.hikari</pattern>
-                            <shadedPattern>me.simpfun.simpban.lib.hikari</shadedPattern>
+                            <shadedPattern>me.simpmc.simpban.lib.hikari</shadedPattern>
                         </relocation>
                         <!-- ACF -->
                         <relocation>
                             <pattern>co.aikar.commands</pattern>
-                            <shadedPattern>me.simpfun.simpban.lib.acf</shadedPattern>
+                            <shadedPattern>me.simpmc.simpban.lib.acf</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.locales</pattern>
-                            <shadedPattern>me.simpfun.simpban.lib.locales</shadedPattern>
+                            <shadedPattern>me.simpmc.simpban.lib.locales</shadedPattern>
                         </relocation>
                         <!-- FastInv -->
                         <relocation>
                             <pattern>fr.mrmicky.fastinv</pattern>
-                            <shadedPattern>me.simpfun.simpban.lib.fastinv</shadedPattern>
-                        </relocation>
-                        <!-- Javalin -->
-                        <relocation>
-                            <pattern>io.javalin</pattern>
-                            <shadedPattern>me.simpfun.simpban.lib.javalin</shadedPattern>
-                        </relocation>
-                        <!-- Jetty -->
-                        <relocation>
-                            <pattern>org.eclipse.jetty</pattern>
-                            <shadedPattern>me.simpfun.simpban.lib.jetty</shadedPattern>
-                        </relocation>
-                        <!-- Gson -->
-                        <relocation>
-                            <pattern>com.google.gson</pattern>
-                            <shadedPattern>me.simpfun.simpban.lib.gson</shadedPattern>
+                            <shadedPattern>me.simpmc.simpban.lib.fastinv</shadedPattern>
                         </relocation>
                     </relocations>
                     <filters>
@@ -218,28 +203,5 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- Javalin - Lightweight web framework -->
-        <dependency>
-            <groupId>io.javalin</groupId>
-            <artifactId>javalin</artifactId>
-            <version>6.4.0</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- Gson - JSON handling -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.11.0</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- SLF4J Simple - Required by Javalin -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>2.0.16</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 </project>

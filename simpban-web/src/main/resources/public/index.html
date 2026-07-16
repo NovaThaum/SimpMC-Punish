@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SimpBan 管理面板</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1 id="server-name">SimpBan 管理面板</h1>
+      <p id="database-label">正在连接数据库...</p>
+    </div>
+    <button id="refresh-button" type="button">刷新</button>
+  </header>
+
+  <main class="layout">
+    <section class="stats-grid" aria-label="统计数据">
+      <article>
+        <span>总记录</span>
+        <strong id="stat-total">-</strong>
+      </article>
+      <article>
+        <span>生效中</span>
+        <strong id="stat-active">-</strong>
+      </article>
+      <article>
+        <span>封禁类</span>
+        <strong id="stat-bans">-</strong>
+      </article>
+      <article>
+        <span>禁言类</span>
+        <strong id="stat-mutes">-</strong>
+      </article>
+    </section>
+
+    <section class="toolbar" aria-label="搜索处罚记录">
+      <label for="search-input">搜索玩家名、UUID 或 IP</label>
+      <div class="search-row">
+        <input id="search-input" type="search" autocomplete="off" placeholder="例如 Steve 或 127.0.0.1">
+        <button id="search-button" type="button">搜索</button>
+      </div>
+    </section>
+
+    <section class="table-section">
+      <div class="section-heading">
+        <h2 id="table-title">最近处罚</h2>
+        <span id="table-status">等待加载</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>玩家</th>
+            <th>类型</th>
+            <th>状态</th>
+            <th>原因</th>
+            <th>执行者</th>
+            <th>时间</th>
+            <th>到期</th>
+          </tr>
+          </thead>
+          <tbody id="punishment-body">
+          <tr>
+            <td colspan="8" class="empty">正在加载...</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

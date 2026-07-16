@@ -1,136 +1,136 @@
 name: SimpBan
 version: '1.0'
-main: me.simpfun.simpban.SimpBan
+main: me.simpmc.simpban.SimpBan
 api-version: '1.21'
-authors: [ GPT5.5, Minecraft0122, SimpFun ]
-description: Professional punishment management system for Minecraft servers
+authors: [ GPT5.5, Minecraft0122, SimpMC ]
+description: 面向 Minecraft 服务器的专业处罚管理插件
 folia-supported: true
 load: STARTUP
 
 commands:
   ban:
-    description: Permanently ban a player
+    description: 永久封禁玩家
     usage: /ban <player> [reason]
     permission: simpban.ban
   tempban:
-    description: Temporarily ban a player
+    description: 临时封禁玩家
     usage: /tempban <player> <duration> [reason]
     permission: simpban.tempban
   unban:
-    description: Unban a player
+    description: 解除玩家封禁
     usage: /unban <player>
     permission: simpban.unban
   banip:
-    description: Permanently IP ban a player (auto-resolves IP)
+    description: 永久封禁玩家 IP（自动解析 IP）
     usage: /banip <player> [reason]
     permission: simpban.banip
   tempbanip:
-    description: Temporarily IP ban a player (auto-resolves IP)
+    description: 临时封禁玩家 IP（自动解析 IP）
     usage: /tempbanip <player> <duration> [reason]
     permission: simpban.tempbanip
   unbanip:
-    description: Unban a player's IP (auto-resolves IP)
+    description: 解除玩家 IP 封禁（自动解析 IP）
     usage: /unbanip <player>
     permission: simpban.unbanip
   mute:
-    description: Permanently mute a player
+    description: 永久禁言玩家
     usage: /mute <player> [reason]
     permission: simpban.mute
   tempmute:
-    description: Temporarily mute a player
+    description: 临时禁言玩家
     usage: /tempmute <player> <duration> [reason]
     permission: simpban.tempmute
   unmute:
-    description: Unmute a player
+    description: 解除玩家禁言
     usage: /unmute <player>
     permission: simpban.unmute
   muteip:
-    description: Permanently IP mute a player (auto-resolves IP)
+    description: 永久禁言玩家 IP（自动解析 IP）
     usage: /muteip <player> [reason]
     permission: simpban.muteip
   tempmuteip:
-    description: Temporarily IP mute a player (auto-resolves IP)
+    description: 临时禁言玩家 IP（自动解析 IP）
     usage: /tempmuteip <player> <duration> [reason]
     permission: simpban.tempmuteip
   unmuteip:
-    description: Unmute a player's IP (auto-resolves IP)
+    description: 解除玩家 IP 禁言（自动解析 IP）
     usage: /unmuteip <player>
     permission: simpban.unmuteip
   kick:
-    description: Kick a player from the server
+    description: 将玩家踢出服务器
     usage: /kick <player> [reason]
     permission: simpban.kick
   punish:
-    description: Open the punishment GUI for a player
+    description: 打开玩家处罚 GUI
     usage: /punish <player>
     permission: simpban.punish
   history:
-    description: View punishment history
+    description: 查看玩家处罚历史
     usage: /history <player>
     permission: simpban.history
   simpban:
-    description: SimpBan admin commands
-    usage: /simpban <reload>
+    description: SimpBan 管理命令
+    usage: /simpban <reload|help>
     permission: simpban.admin
     aliases: [sb]
 
 permissions:
   simpban.ban:
-    description: Allows permanent banning
+    description: 允许永久封禁玩家
     default: op
   simpban.tempban:
-    description: Allows temporary banning
+    description: 允许临时封禁玩家
     default: op
   simpban.unban:
-    description: Allows unbanning players
+    description: 允许解除玩家封禁
     default: op
   simpban.banip:
-    description: Allows permanent IP banning
+    description: 允许永久封禁玩家 IP
     default: op
   simpban.tempbanip:
-    description: Allows temporary IP banning
+    description: 允许临时封禁玩家 IP
     default: op
   simpban.unbanip:
-    description: Allows unbanning IPs
+    description: 允许解除 IP 封禁
     default: op
   simpban.mute:
-    description: Allows permanent muting
+    description: 允许永久禁言玩家
     default: op
   simpban.tempmute:
-    description: Allows temporary muting
+    description: 允许临时禁言玩家
     default: op
   simpban.unmute:
-    description: Allows unmuting players
+    description: 允许解除玩家禁言
     default: op
   simpban.muteip:
-    description: Allows permanent IP muting
+    description: 允许永久禁言玩家 IP
     default: op
   simpban.tempmuteip:
-    description: Allows temporary IP muting
+    description: 允许临时禁言玩家 IP
     default: op
   simpban.unmuteip:
-    description: Allows unmuting IPs
+    description: 允许解除 IP 禁言
     default: op
   simpban.kick:
-    description: Allows kicking players
+    description: 允许踢出玩家
     default: op
   simpban.punish:
-    description: Allows using punishment GUI
+    description: 允许使用处罚 GUI
     default: op
   simpban.history:
-    description: Allows viewing punishment history
+    description: 允许查看处罚历史
     default: op
   simpban.admin:
-    description: Admin commands (reload, etc.)
+    description: 允许使用管理命令（重载等）
     default: op
   simpban.help:
-    description: Allows viewing SimpBan help
+    description: 允许查看 SimpBan 帮助
     default: op
   simpban.bypass:
-    description: Bypass all punishments
+    description: 绕过所有处罚检查
     default: false
   simpban.staff:
-    description: All staff permissions
+    description: SimpBan 工作人员权限组
     default: op
     children:
       simpban.ban: true

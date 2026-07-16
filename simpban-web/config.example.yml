@@ -1,0 +1,26 @@
+# SimpBan 独立网页访问服务配置
+
+server:
+  host: "0.0.0.0"
+  port: 8080
+  name: "SimpBan 管理面板"
+
+# 数据库类型可选: sqlite, mysql
+database:
+  type: "sqlite"
+
+  sqlite:
+    # 可以填写 SQLite 文件路径，也可以填写目录；如果是目录，将自动使用 punishments.db。
+    path: "plugins/SimpBan/punishments.db"
+
+  mysql:
+    host: "localhost"
+    port: 3306
+    database: "simpban"
+    username: "root"
+    password: "password"
+    properties:
+      useSSL: false
+      characterEncoding: "utf8"
+
+  pool-size: 5

@@ -3,337 +3,328 @@ prefix: "&8[&c&lSimpBan&8]&r "
 punishments:
   ban:
     screen: |
-      &c&l❌ YOU ARE BANNED ❌
-      
-      &7Player: &f{player}
-      &7Banned by: &f{staff}
-      &7Reason: &f{reason}
-      &7Expires: &f{expires}
-      
-      &7Appeal at: &ediscord.gg/yourserver
+      &c&l你已被封禁
+
+      &7玩家: &f{player}
+      &7执行者: &f{staff}
+      &7原因: &f{reason}
+      &7到期: &f{expires}
+
+      &7如需申诉，请联系服务器管理组。
     broadcast:
       enabled: true
-      message: "&c{staff} &7banned &c{player} &7for: &f{reason} &7({duration})"
-    success: "&aSuccessfully banned {player}"
-  
+      message: "&c{staff} &7封禁了 &c{player} &7原因: &f{reason} &7({duration})"
+    success: "&a已封禁 {player}"
+
   tempban:
     broadcast:
       enabled: true
-      message: "&c{staff} &7temp-banned &c{player} &7for: &f{reason} &7({duration})"
-    success: "&aSuccessfully temp-banned {player} for {duration}"
+      message: "&c{staff} &7临时封禁了 &c{player} &7原因: &f{reason} &7({duration})"
+    success: "&a已临时封禁 {player}，时长 {duration}"
 
   unban:
     broadcast:
       enabled: true
-      message: "&a{staff} &7unbanned &a{player}"
-    success: "&aSuccessfully unbanned {player}"
+      message: "&a{staff} &7解除了 &a{player} &7的封禁"
+    success: "&a已解除 {player} 的封禁"
 
   mute:
     blocked: |
-      &c&l⚠ You are muted!
-      &7Muted by: &f{staff}
-      &7Reason: &f{reason}
-      &7Expires: &f{expires}
-    applied: "&c&l⚠ &cYou have been muted by {staff}! Reason: &f{reason}"
+      &c&l你已被禁言
+      &7执行者: &f{staff}
+      &7原因: &f{reason}
+      &7到期: &f{expires}
+    applied: "&c你已被 {staff} 禁言！原因: &f{reason} &7到期: &f{expires}"
     broadcast:
       enabled: true
-      message: "&e{staff} &7muted &e{player} &7for: &f{reason} &7({duration})"
-    success: "&aSuccessfully muted {player}"
+      message: "&e{staff} &7禁言了 &e{player} &7原因: &f{reason} &7({duration})"
+    success: "&a已禁言 {player}"
 
   tempmute:
     broadcast:
       enabled: true
-      message: "&e{staff} &7temp-muted &e{player} &7for: &f{reason} &7({duration})"
-    success: "&aSuccessfully temp-muted {player} for {duration}"
+      message: "&e{staff} &7临时禁言了 &e{player} &7原因: &f{reason} &7({duration})"
+    success: "&a已临时禁言 {player}，时长 {duration}"
 
   unmute:
     broadcast:
       enabled: true
-      message: "&a{staff} &7unmuted &a{player}"
-    notify: "&aYou have been unmuted!"
-    success: "&aSuccessfully unmuted {player}"
+      message: "&a{staff} &7解除了 &a{player} &7的禁言"
+    notify: "&a你的禁言已被解除。"
+    success: "&a已解除 {player} 的禁言"
 
   kick:
     screen: |
-      &6&l⚡ YOU HAVE BEEN KICKED ⚡
-      
-      &7Kicked by: &f{staff}
-      &7Reason: &f{reason}
-      
-      &7You may rejoin the server.
+      &6&l你已被踢出服务器
+
+      &7执行者: &f{staff}
+      &7原因: &f{reason}
+
+      &7你可以重新加入服务器。
     broadcast:
       enabled: true
-      message: "&9{staff} &7kicked &9{player} &7for: &f{reason}"
-    success: "&aSuccessfully kicked {player}"
+      message: "&9{staff} &7踢出了 &9{player} &7原因: &f{reason}"
+    success: "&a已踢出 {player}"
 
   banip:
     broadcast:
       enabled: true
-      message: "&c{staff} &7IP banned &c{player} &7(&f{ip}&7) for: &f{reason} &7({duration})"
-    success: "&aSuccessfully IP banned {player} ({ip})"
+      message: "&c{staff} &7封禁了 &c{player} &7的 IP (&f{ip}&7) 原因: &f{reason} &7({duration})"
+    success: "&a已封禁 {player} 的 IP ({ip})"
 
   tempbanip:
     broadcast:
       enabled: true
-      message: "&c{staff} &7temp IP banned &c{player} &7(&f{ip}&7) for: &f{reason} &7({duration})"
-    success: "&aSuccessfully temp IP banned {player} ({ip}) for {duration}"
+      message: "&c{staff} &7临时封禁了 &c{player} &7的 IP (&f{ip}&7) 原因: &f{reason} &7({duration})"
+    success: "&a已临时封禁 {player} 的 IP ({ip})，时长 {duration}"
 
   unbanip:
     broadcast:
       enabled: true
-      message: "&a{staff} &7removed IP ban for &a{player} &7({ip})"
-    success: "&aSuccessfully removed IP ban for {player}"
+      message: "&a{staff} &7解除了 &a{player} &7的 IP 封禁 (&f{ip}&7)"
+    success: "&a已解除 {player} 的 IP 封禁"
 
   muteip:
     broadcast:
       enabled: true
-      message: "&e{staff} &7IP muted &e{player} &7(&f{ip}&7) for: &f{reason} &7({duration})"
-    success: "&aSuccessfully IP muted {player} ({ip})"
+      message: "&e{staff} &7禁言了 &e{player} &7的 IP (&f{ip}&7) 原因: &f{reason} &7({duration})"
+    success: "&a已禁言 {player} 的 IP ({ip})"
 
   tempmuteip:
     broadcast:
       enabled: true
-      message: "&e{staff} &7temp IP muted &e{player} &7(&f{ip}&7) for: &f{reason} &7({duration})"
-    success: "&aSuccessfully temp IP muted {player} ({ip}) for {duration}"
+      message: "&e{staff} &7临时禁言了 &e{player} &7的 IP (&f{ip}&7) 原因: &f{reason} &7({duration})"
+    success: "&a已临时禁言 {player} 的 IP ({ip})，时长 {duration}"
 
   unmuteip:
     broadcast:
       enabled: true
-      message: "&a{staff} &7removed IP mute for &a{player} &7({ip})"
-    success: "&aSuccessfully removed IP mute for {player}"
+      message: "&a{staff} &7解除了 &a{player} &7的 IP 禁言 (&f{ip}&7)"
+    success: "&a已解除 {player} 的 IP 禁言"
 
 errors:
-  player-not-found: "&cPlayer not found!"
-  player-not-online: "&cPlayer is not online!"
-  cannot-punish: "&cYou cannot punish this player!"
-  not-banned: "&c{player} is not banned!"
-  not-muted: "&c{player} is not muted!"
-  invalid-duration: "&cInvalid duration format! Use: 1h, 30m, 7d, etc."
-  no-permission: "&cYou don't have permission to do this!"
+  player-not-found: "&c找不到该玩家。"
+  player-not-online: "&c该玩家当前不在线。"
+  cannot-punish: "&c你不能处罚该玩家。"
+  not-banned: "&c{player} 当前没有被封禁。"
+  not-muted: "&c{player} 当前没有被禁言。"
+  invalid-duration: "&c时长格式无效！示例: 1h, 30m, 7d。"
+  no-permission: "&c你没有权限执行该操作。"
 
 gui:
   punish:
-    title: "&c&lPunish &8» &e{player}"
+    title: "&c&l处罚 &8> &e{player}"
     items:
       ban:
         material: BARRIER
-        name: "&c&lPermanent Ban"
+        name: "&c&l永久封禁"
         lore:
           - ""
-          - "&7Permanently ban this player"
-          - "&7from the server."
+          - "&7永久禁止该玩家进入服务器。"
           - ""
-          - "&cThis action cannot be undone!"
-          - ""
-          - "&e▶ Click to apply"
+          - "&e点击执行"
       tempban:
         material: CLOCK
-        name: "&6&lTemporary Ban"
+        name: "&6&l临时封禁"
         lore:
           - ""
-          - "&7Temporarily ban this player"
-          - "&7for a set duration."
+          - "&7按指定时长封禁该玩家。"
           - ""
-          - "&e▶ Click to select duration"
+          - "&e点击选择时长"
       kick:
         material: LEATHER_BOOTS
-        name: "&9&lKick"
+        name: "&9&l踢出"
         lore:
           - ""
-          - "&7Kick this player from"
-          - "&7the server."
+          - "&7将该玩家踢出服务器。"
           - ""
-          - "&e▶ Click to apply"
+          - "&e点击执行"
       mute:
         material: PAPER
-        name: "&e&lPermanent Mute"
+        name: "&e&l永久禁言"
         lore:
           - ""
-          - "&7Permanently mute this player"
-          - "&7from chatting."
+          - "&7永久禁止该玩家聊天。"
           - ""
-          - "&e▶ Click to apply"
+          - "&e点击执行"
       tempmute:
         material: WRITABLE_BOOK
-        name: "&a&lTemporary Mute"
+        name: "&a&l临时禁言"
         lore:
           - ""
-          - "&7Temporarily mute this player"
-          - "&7for a set duration."
+          - "&7按指定时长禁言该玩家。"
           - ""
-          - "&e▶ Click to select duration"
+          - "&e点击选择时长"
       history:
         material: BOOK
-        name: "&d&lView History"
+        name: "&d&l处罚历史"
         lore:
           - ""
-          - "&7View this player's"
-          - "&7punishment history."
+          - "&7查看该玩家的处罚记录。"
           - ""
-          - "&e▶ Click to view"
+          - "&e点击查看"
       close:
         material: RED_STAINED_GLASS_PANE
-        name: "&c&lClose"
+        name: "&c&l关闭"
         lore:
           - ""
-          - "&e▶ Click to close"
+          - "&e点击关闭"
       player-head:
         name: "&e{player}"
         lore:
           - ""
           - "&7UUID: &f{uuid}"
-          - "&7Online: {online}"
+          - "&7在线: {online}"
           - ""
-          - "&7Select a punishment below"
+          - "&7请选择下方处罚类型。"
 
   duration:
-    title: "&c&lSelect Duration &8» &e{player}"
+    title: "&c&l选择时长 &8> &e{player}"
     items:
       glass-pane:
         material: GRAY_STAINED_GLASS_PANE
         name: " "
       back:
         material: ARROW
-        name: "&7&l← Back"
+        name: "&7&l返回"
         lore:
           - ""
-          - "&e▶ Click to go back"
+          - "&e点击返回"
       permanent:
         material: BEDROCK
-        name: "&c&lPermanent"
+        name: "&c&l永久"
         lore:
           - ""
-          - "&7Make this punishment"
-          - "&7permanent (no expiry)."
+          - "&7将本次处罚设为永久。"
           - ""
-          - "&e▶ Click to apply"
+          - "&e点击执行"
       custom:
         material: NAME_TAG
-        name: "&b&lCustom Duration"
+        name: "&b&l自定义时长"
         lore:
           - ""
-          - "&7Enter a custom duration"
-          - "&7in chat (e.g. 2h30m, 5d)"
+          - "&7在聊天栏输入自定义时长。"
+          - "&7示例: 2h30m, 5d"
           - ""
-          - "&e▶ Click to enter"
+          - "&e点击输入"
       1h:
         material: LIME_DYE
-        name: "&a1 Hour"
+        name: "&a1 小时"
         lore:
           - ""
-          - "&7Duration: &f{duration}"
+          - "&7时长: &f{duration}"
           - ""
-          - "&e▶ Click to apply"
+          - "&e点击执行"
       6h:
         material: YELLOW_DYE
-        name: "&e6 Hours"
+        name: "&e6 小时"
         lore:
           - ""
-          - "&7Duration: &f{duration}"
+          - "&7时长: &f{duration}"
           - ""
-          - "&e▶ Click to apply"
+          - "&e点击执行"
       1d:
         material: ORANGE_DYE
-        name: "&61 Day"
+        name: "&61 天"
         lore:
           - ""
-          - "&7Duration: &f{duration}"
+          - "&7时长: &f{duration}"
           - ""
-          - "&e▶ Click to apply"
+          - "&e点击执行"
       3d:
         material: RED_DYE
-        name: "&c3 Days"
+        name: "&c3 天"
         lore:
           - ""
-          - "&7Duration: &f{duration}"
+          - "&7时长: &f{duration}"
           - ""
-          - "&e▶ Click to apply"
+          - "&e点击执行"
       7d:
         material: PURPLE_DYE
-        name: "&51 Week"
+        name: "&51 周"
         lore:
           - ""
-          - "&7Duration: &f{duration}"
+          - "&7时长: &f{duration}"
           - ""
-          - "&e▶ Click to apply"
+          - "&e点击执行"
       30d:
         material: MAGENTA_DYE
-        name: "&d30 Days"
+        name: "&d30 天"
         lore:
           - ""
-          - "&7Duration: &f{duration}"
+          - "&7时长: &f{duration}"
           - ""
-          - "&e▶ Click to apply"
+          - "&e点击执行"
       90d:
         material: BLUE_DYE
-        name: "&990 Days"
+        name: "&990 天"
         lore:
           - ""
-          - "&7Duration: &f{duration}"
+          - "&7时长: &f{duration}"
           - ""
-          - "&e▶ Click to apply"
+          - "&e点击执行"
 
   history:
-    title: "&d&lHistory &8» &e{player} &7(Page {page})"
+    title: "&d&l历史记录 &8> &e{player} &7(第 {page} 页)"
     items:
       prev-page:
         material: ARROW
-        name: "&a← Previous Page"
+        name: "&a上一页"
         lore:
           - ""
-          - "&e▶ Click to go back"
+          - "&e点击返回上一页"
       next-page:
         material: ARROW
-        name: "&aNext Page →"
+        name: "&a下一页"
         lore:
           - ""
-          - "&e▶ Click to continue"
+          - "&e点击进入下一页"
       back:
         material: BARRIER
-        name: "&c&lBack to Punish"
+        name: "&c&l返回处罚菜单"
         lore:
           - ""
-          - "&e▶ Click to go back"
+          - "&e点击返回"
       player-head:
         name: "&e{player}"
         lore:
           - ""
-          - "&7Total punishments: &f{total}"
-          - "&7Active: &f{active}"
+          - "&7处罚总数: &f{total}"
+          - "&7生效中: &f{active}"
 
 input:
   reason:
-    header: "&8&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    title: "&c&lSimpBan &8» &fEnter Punishment Reason"
-    target: "&7Target: &e{player}"
-    type: "&7Type: {type}"
-    duration: "&7Duration: &f{duration}"
-    instruction: "&7Type your reason in chat, or type &ccancel &7to cancel."
-    cancelled: "&cPunishment cancelled."
-    timeout: "&cPunishment cancelled (timed out)."
-    no-permission: "&cYou don't have permission to use this punishment!"
-    error: "&cAn error occurred while applying the punishment."
-    loading-history: "&7Loading punishment history..."
+    header: "&8&m----------------------------------------"
+    title: "&c&lSimpBan &8> &f输入处罚原因"
+    target: "&7目标: &e{player}"
+    type: "&7类型: {type}"
+    duration: "&7时长: &f{duration}"
+    instruction: "&7请在聊天栏输入原因，输入 &c取消 &7取消操作。"
+    cancelled: "&c已取消处罚。"
+    timeout: "&c处罚已取消（输入超时）。"
+    no-permission: "&c你没有权限使用该处罚类型。"
+    error: "&c执行处罚时出现错误，请查看控制台。"
+    loading-history: "&7正在加载处罚历史..."
 
   custom-duration:
-    header: "&8&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    title: "&c&lSimpBan &8» &fEnter Custom Duration"
-    format-header: "&7Format examples:"
+    header: "&8&m----------------------------------------"
+    title: "&c&lSimpBan &8> &f输入自定义时长"
+    format-header: "&7格式示例:"
     formats:
-      - "&7  &e1h &7= 1 hour"
-      - "&7  &e30m &7= 30 minutes"
-      - "&7  &e7d &7= 7 days"
-      - "&7  &e2w &7= 2 weeks"
-      - "&7  &e1M &7= 1 month"
-      - "&7  &e1y &7= 1 year"
-      - "&7  &e2h30m &7= 2 hours 30 minutes"
-    instruction: "&7Type your duration, or type &ccancel &7to cancel."
-    cancelled: "&cDuration input cancelled."
-    timeout: "&cDuration input cancelled (timed out)."
-    invalid: "&cInvalid duration format! Try again or type &ecancel&c."
-    success: "&aDuration set to: &f{duration}"
-    no-permission-permanent: "&cYou don't have permission to use permanent punishments!"
+      - "&7  &e1h &7= 1 小时"
+      - "&7  &e30m &7= 30 分钟"
+      - "&7  &e7d &7= 7 天"
+      - "&7  &e2w &7= 2 周"
+      - "&7  &e1M &7= 1 个月"
+      - "&7  &e1y &7= 1 年"
+      - "&7  &e2h30m &7= 2 小时 30 分钟"
+    instruction: "&7请在聊天栏输入时长，输入 &c取消 &7取消操作。"
+    cancelled: "&c已取消时长输入。"
+    timeout: "&c已取消时长输入（输入超时）。"
+    invalid: "&c时长格式无效！请重试，或输入 &e取消 &c取消操作。"
+    success: "&a时长已设置为: &f{duration}"
+    no-permission-permanent: "&c你没有权限使用永久处罚。"
 
-online-yes: "&aYes"
-online-no: "&cNo"
-duration-permanent: "Permanent"
+online-yes: "&a在线"
+online-no: "&c离线"
+duration-permanent: "永久"

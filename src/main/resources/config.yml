@@ -1,18 +1,19 @@
 # SimpBan
-# Professional Punishment Management System v1.0
-# Authors: GPT5.5, Minecraft0122, SimpFun
+# 专业 Minecraft 处罚管理系统 v1.0
+# 作者: GPT5.5, Minecraft0122, SimpMC
 
-# Bypass Configuration
-# Players with the simpban.bypass permission will bypass all punishments
-# Permission: simpban.bypass - Bypasses bans, mutes, and kicks
+# 绕过权限
+# 拥有该权限的玩家不会受到封禁、禁言和踢出影响。
 bypass:
   permission: "simpban.bypass"
 
-# Database Configuration
+# 数据库配置
+# type 可选: sqlite, mysql
 database:
   type: "sqlite"
 
   sqlite:
+    # 相对于 plugins/SimpBan 目录的 SQLite 数据库文件名。
     file: "punishments.db"
 
   mysql:
@@ -28,14 +29,14 @@ database:
 
   pool-size: 5
 
-# Cache Configuration
+# 缓存配置
 cache:
   expiry-minutes: 10
   max-size: 1000
   expiry-check-interval: 60
 
-# Duration Presets (shown in GUI)
-# Format: <number><unit> where unit = s/m/h/d/w/M/y
+# GUI 内显示的时长预设
+# 格式: <数字><单位>，单位支持 s/m/h/d/w/M/y
 durations:
   presets:
     - "1h"
@@ -46,24 +47,9 @@ durations:
     - "30d"
     - "90d"
 
-# Discord Webhook Configuration
-# Logs all punishments to a Discord channel via webhook
+# Discord Webhook 配置
+# 开启后会把处罚记录发送到指定 Discord 频道。
 discord:
   enabled: false
   webhook-url: "YOUR_WEBHOOK_URL_HERE"
   batch-interval-seconds: 5
-
-# Web Dashboard Configuration
-# Embedded web panel for viewing and managing punishments
-web-dashboard:
-  enabled: false
-
-  host: "0.0.0.0"
-  port: 8080
-
-  branding:
-    server-name: "My Server"
-    accent-color: "#ff5555"
-    footer-text: "Powered by SimpBan"
-
-  admin-api-key: "CHANGE-ME-TO-A-SECURE-KEY"
