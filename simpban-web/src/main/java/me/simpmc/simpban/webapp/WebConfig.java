@@ -99,7 +99,7 @@ public record WebConfig(
 
     private static void printHelp() {
         System.out.println("""
-                SimpBan Web 1.0
+                SimpBan 网页服务 1.0
 
                 用法:
                   java -jar simpban-web-1.0.jar --config config.yml

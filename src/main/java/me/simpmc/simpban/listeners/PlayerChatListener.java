@@ -1,13 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  io.papermc.paper.event.player.AsyncChatEvent
- *  org.bukkit.entity.Player
- *  org.bukkit.event.EventHandler
- *  org.bukkit.event.EventPriority
- *  org.bukkit.event.Listener
- */
 package me.simpmc.simpban.listeners;
 
 import io.papermc.paper.event.player.AsyncChatEvent;

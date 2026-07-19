@@ -1,19 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  io.papermc.paper.event.player.AsyncChatEvent
- *  net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
- *  org.bukkit.OfflinePlayer
- *  org.bukkit.entity.Entity
- *  org.bukkit.entity.Player
- *  org.bukkit.event.EventHandler
- *  org.bukkit.event.EventPriority
- *  org.bukkit.event.HandlerList
- *  org.bukkit.event.Listener
- *  org.bukkit.event.player.PlayerQuitEvent
- *  org.bukkit.plugin.Plugin
- */
 package me.simpmc.simpban.gui;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
@@ -124,7 +108,7 @@ implements Listener {
             case MUTE -> this.plugin.getPunishmentManager().mute(this.target.getUniqueId(), this.target.getName(), staffUUID, staffName, reason);
             case TEMPMUTE -> this.plugin.getPunishmentManager().tempmute(this.target.getUniqueId(), this.target.getName(), staffUUID, staffName, this.durationMs, reason);
             case KICK -> this.plugin.getPunishmentManager().kick(this.target.getUniqueId(), this.target.getName(), staffUUID, staffName, reason);
-            case BANIP, TEMPBANIP, MUTEIP, TEMPMUTEIP -> throw new UnsupportedOperationException("IP 类处罚必须通过命令执行，不能通过 GUI 执行");
+            case BANIP, TEMPBANIP, MUTEIP, TEMPMUTEIP -> throw new UnsupportedOperationException("IP 类处罚必须通过命令执行，不能通过菜单界面执行");
         };
         future.thenAccept(result -> {
             String durationStr = this.durationMs > 0L ? TimeUtil.formatDuration(this.durationMs) : this.msg().getMessage("duration-permanent");

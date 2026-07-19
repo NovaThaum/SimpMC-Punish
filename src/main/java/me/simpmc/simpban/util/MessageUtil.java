@@ -1,12 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  net.kyori.adventure.text.Component
- *  net.kyori.adventure.text.minimessage.MiniMessage
- *  net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
- *  net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
- */
 package me.simpmc.simpban.util;
 
 import java.util.regex.Matcher;

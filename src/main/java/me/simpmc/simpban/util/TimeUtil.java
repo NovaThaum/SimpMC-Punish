@@ -1,6 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- */
 package me.simpmc.simpban.util;
 
 import java.time.Duration;

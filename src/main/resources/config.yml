@@ -8,7 +8,7 @@ bypass:
   permission: "simpban.bypass"
 
 # 数据库配置
-# type 可选: sqlite, mysql
+# 数据库类型可选: sqlite, mysql
 database:
   type: "sqlite"
 
@@ -35,7 +35,7 @@ cache:
   max-size: 1000
   expiry-check-interval: 60
 
-# GUI 内显示的时长预设
+# 菜单界面内显示的时长预设
 # 格式: <数字><单位>，单位支持 s/m/h/d/w/M/y
 durations:
   presets:
@@ -47,9 +47,9 @@ durations:
     - "30d"
     - "90d"
 
-# Discord Webhook 配置
+# Discord 通知配置
 # 开启后会把处罚记录发送到指定 Discord 频道。
 discord:
   enabled: false
-  webhook-url: "YOUR_WEBHOOK_URL_HERE"
+  notification-url: "请填写 Discord 通知地址"
   batch-interval-seconds: 5

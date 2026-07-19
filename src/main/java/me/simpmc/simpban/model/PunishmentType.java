@@ -1,6 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- */
 package me.simpmc.simpban.model;
 
 public enum PunishmentType {

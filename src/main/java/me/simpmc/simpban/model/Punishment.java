@@ -1,6 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- */
 package me.simpmc.simpban.model;
 
 import java.time.Instant;
@@ -184,7 +181,7 @@ public class Punishment {
     }
 
     public String toString() {
-        return "Punishment{id=" + this.id + ", targetName='" + this.targetName + "', type=" + String.valueOf((Object)this.type) + ", reason='" + this.reason + "', active=" + this.active + ", expiresAt=" + String.valueOf(this.expiresAt) + "}";
+        return "处罚记录{编号=" + this.id + ", 目标玩家='" + this.targetName + "', 类型=" + String.valueOf((Object)this.type) + ", 原因='" + this.reason + "', 生效=" + this.active + ", 到期时间=" + String.valueOf(this.expiresAt) + "}";
     }
 }
 

@@ -1,13 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  org.bukkit.event.EventHandler
- *  org.bukkit.event.EventPriority
- *  org.bukkit.event.Listener
- *  org.bukkit.event.player.AsyncPlayerPreLoginEvent
- *  org.bukkit.event.player.AsyncPlayerPreLoginEvent$Result
- */
 package me.simpmc.simpban.listeners;
 
 import java.util.Optional;

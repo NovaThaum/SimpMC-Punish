@@ -4,7 +4,7 @@ SimpBan 是面向 Minecraft 服务器的处罚管理插件，作者为 GPT5.5、
 
 本仓库包含两个产物：
 
-- Minecraft 插件本体：只负责封禁、禁言、踢出、历史记录、GUI、数据库和 Discord Webhook。
+- Minecraft 插件本体：只负责封禁、禁言、踢出、历史记录、菜单界面、数据库和 Discord 通知。
 - 独立网页访问服务：位于 `simpban-web/`，单独运行，不再嵌入插件 JAR。
 
 ## 构建插件

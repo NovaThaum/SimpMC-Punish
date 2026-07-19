@@ -1,13 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  org.bukkit.Material
- *  org.bukkit.OfflinePlayer
- *  org.bukkit.entity.Entity
- *  org.bukkit.entity.Player
- *  org.bukkit.inventory.ItemStack
- */
 package me.simpmc.simpban.gui;
 
 import java.util.ArrayList;

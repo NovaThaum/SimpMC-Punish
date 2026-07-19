@@ -46,7 +46,7 @@ public final class SimpBan extends JavaPlugin {
         PunishmentGUI.initializeIcons();
         DurationGUI.initializeIcons();
         HistoryGUI.initializeIcons();
-        this.getLogger().info("GUI 图标已预缓存");
+        this.getLogger().info("菜单图标已预缓存");
 
         this.getLogger().info("正在初始化管理器...");
         this.schedulerManager = new SchedulerManager(this);
@@ -60,7 +60,7 @@ public final class SimpBan extends JavaPlugin {
         this.punishmentManager = new PunishmentManager(this, this.punishmentDAO, this.cacheManager);
         this.getLogger().info("处罚管理器已初始化");
         this.webhookManager = new DiscordWebhookManager(this);
-        this.getLogger().info("Discord Webhook 管理器已初始化");
+        this.getLogger().info("Discord 通知管理器已初始化");
 
         this.registerCommands();
         this.getLogger().info("命令已注册");
@@ -95,7 +95,7 @@ public final class SimpBan extends JavaPlugin {
                 "&cSimpBan &7v" + this.getPluginMeta().getVersion(),
                 "&7专业 Minecraft 处罚管理系统",
                 "&7作者: &eGPT5.5, Minecraft0122, SimpMC",
-                "&8模块: &a数据库 &8| &a缓存 &8| &aDiscord",
+                "&8模块: &a数据库 &8| &a缓存 &8| &a通知",
                 "&8========================================",
                 ""
         };

@@ -16,6 +16,7 @@ public final class SimpBanWebApplication {
     }
 
     public static void main(String[] args) throws Exception {
+        configureLogging();
         WebConfig config = WebConfig.load(args);
         Database database = new Database(config);
         PunishmentRepository repository = new PunishmentRepository(database);
@@ -63,8 +64,19 @@ public final class SimpBanWebApplication {
         }));
 
         app.start(config.host(), config.port());
-        System.out.println("SimpBan Web 已启动: http://" + displayHost(config.host()) + ":" + config.port());
+        System.out.println("SimpBan 网页服务已启动: http://" + displayHost(config.host()) + ":" + config.port());
         System.out.println("数据库类型: " + config.databaseType());
+    }
+
+    private static void configureLogging() {
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel",
+                System.getProperty("org.slf4j.simpleLogger.defaultLogLevel", "warn"));
+        System.setProperty("org.slf4j.simpleLogger.log.io.javalin",
+                System.getProperty("org.slf4j.simpleLogger.log.io.javalin", "warn"));
+        System.setProperty("org.slf4j.simpleLogger.log.org.eclipse.jetty",
+                System.getProperty("org.slf4j.simpleLogger.log.org.eclipse.jetty", "warn"));
+        System.setProperty("org.slf4j.simpleLogger.log.com.zaxxer.hikari",
+                System.getProperty("org.slf4j.simpleLogger.log.com.zaxxer.hikari", "warn"));
     }
 
     private static void json(Context ctx, Object value) {

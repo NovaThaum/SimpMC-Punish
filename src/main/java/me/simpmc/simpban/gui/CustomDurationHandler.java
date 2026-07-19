@@ -1,19 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  io.papermc.paper.event.player.AsyncChatEvent
- *  net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
- *  org.bukkit.OfflinePlayer
- *  org.bukkit.entity.Entity
- *  org.bukkit.entity.Player
- *  org.bukkit.event.EventHandler
- *  org.bukkit.event.EventPriority
- *  org.bukkit.event.HandlerList
- *  org.bukkit.event.Listener
- *  org.bukkit.event.player.PlayerQuitEvent
- *  org.bukkit.plugin.Plugin
- */
 package me.simpmc.simpban.gui;
 
 import io.papermc.paper.event.player.AsyncChatEvent;

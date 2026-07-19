@@ -1,13 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  org.bukkit.Bukkit
- *  org.bukkit.OfflinePlayer
- *  org.bukkit.command.CommandSender
- *  org.bukkit.entity.Entity
- *  org.bukkit.entity.Player
- */
 package me.simpmc.simpban.commands;
 
 import java.net.InetSocketAddress;
@@ -53,7 +43,7 @@ extends BaseCommand {
     @CommandPermission(value="simpban.ban")
     @CommandCompletion(value="@players")
     @Description(value="永久封禁玩家")
-    @Syntax(value="<player> [reason]")
+    @Syntax(value="<玩家> [原因]")
     public void onBan(CommandSender sender, String targetName, @Optional String reason) {
         this.executePunishment(sender, targetName, PunishmentType.BAN, -1L, reason);
     }
@@ -62,7 +52,7 @@ extends BaseCommand {
     @CommandPermission(value="simpban.tempban")
     @CommandCompletion(value="@players")
     @Description(value="临时封禁玩家")
-    @Syntax(value="<player> <duration> [reason]")
+    @Syntax(value="<玩家> <时长> [原因]")
     public void onTempBan(CommandSender sender, String targetName, String duration, @Optional String reason) {
         long durationMs = TimeUtil.parseDuration(duration);
         if (durationMs <= 0L) {
@@ -76,7 +66,7 @@ extends BaseCommand {
     @CommandPermission(value="simpban.unban")
     @CommandCompletion(value="@players")
     @Description(value="解除玩家封禁")
-    @Syntax(value="<player>")
+    @Syntax(value="<玩家>")
     public void onUnban(CommandSender sender, String targetName) {
         UUID uUID;
         OfflinePlayer target = Bukkit.getOfflinePlayer((String)targetName);
@@ -109,7 +99,7 @@ extends BaseCommand {
     @CommandPermission(value="simpban.mute")
     @CommandCompletion(value="@players")
     @Description(value="永久禁言玩家")
-    @Syntax(value="<player> [reason]")
+    @Syntax(value="<玩家> [原因]")
     public void onMute(CommandSender sender, String targetName, @Optional String reason) {
         this.executePunishment(sender, targetName, PunishmentType.MUTE, -1L, reason);
     }
@@ -118,7 +108,7 @@ extends BaseCommand {
     @CommandPermission(value="simpban.tempmute")
     @CommandCompletion(value="@players")
     @Description(value="临时禁言玩家")
-    @Syntax(value="<player> <duration> [reason]")
+    @Syntax(value="<玩家> <时长> [原因]")
     public void onTempMute(CommandSender sender, String targetName, String duration, @Optional String reason) {
         long durationMs = TimeUtil.parseDuration(duration);
         if (durationMs <= 0L) {
@@ -132,7 +122,7 @@ extends BaseCommand {
     @CommandPermission(value="simpban.unmute")
     @CommandCompletion(value="@players")
     @Description(value="解除玩家禁言")
-    @Syntax(value="<player>")
+    @Syntax(value="<玩家>")
     public void onUnmute(CommandSender sender, String targetName) {
         UUID uUID;
         OfflinePlayer target = Bukkit.getOfflinePlayer((String)targetName);
@@ -170,7 +160,7 @@ extends BaseCommand {
     @CommandPermission(value="simpban.banip")
     @CommandCompletion(value="@players")
     @Description(value="永久封禁玩家 IP（自动解析 IP）")
-    @Syntax(value="<player> [reason]")
+    @Syntax(value="<玩家> [原因]")
     public void onBanIp(CommandSender sender, String targetName, @Optional String reason) {
         this.executeIpPunishment(sender, targetName, PunishmentType.BANIP, -1L, reason);
     }
@@ -179,7 +169,7 @@ extends BaseCommand {
     @CommandPermission(value="simpban.tempbanip")
     @CommandCompletion(value="@players")
     @Description(value="临时封禁玩家 IP（自动解析 IP）")
-    @Syntax(value="<player> <duration> [reason]")
+    @Syntax(value="<玩家> <时长> [原因]")
     public void onTempBanIp(CommandSender sender, String targetName, String duration, @Optional String reason) {
         long durationMs = TimeUtil.parseDuration(duration);
         if (durationMs <= 0L) {
@@ -193,7 +183,7 @@ extends BaseCommand {
     @CommandPermission(value="simpban.unbanip")
     @CommandCompletion(value="@players")
     @Description(value="解除玩家 IP 封禁（自动解析 IP）")
-    @Syntax(value="<player>")
+    @Syntax(value="<玩家>")
     public void onUnbanIp(CommandSender sender, String targetName) {
         UUID uUID;
         OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer((String)targetName);
@@ -243,7 +233,7 @@ extends BaseCommand {
     @CommandPermission(value="simpban.muteip")
     @CommandCompletion(value="@players")
     @Description(value="永久禁言玩家 IP（自动解析 IP）")
-    @Syntax(value="<player> [reason]")
+    @Syntax(value="<玩家> [原因]")
     public void onMuteIp(CommandSender sender, String targetName, @Optional String reason) {
         this.executeIpPunishment(sender, targetName, PunishmentType.MUTEIP, -1L, reason);
     }
@@ -252,7 +242,7 @@ extends BaseCommand {
     @CommandPermission(value="simpban.tempmuteip")
     @CommandCompletion(value="@players")
     @Description(value="临时禁言玩家 IP（自动解析 IP）")
-    @Syntax(value="<player> <duration> [reason]")
+    @Syntax(value="<玩家> <时长> [原因]")
     public void onTempMuteIp(CommandSender sender, String targetName, String duration, @Optional String reason) {
         long durationMs = TimeUtil.parseDuration(duration);
         if (durationMs <= 0L) {
@@ -266,7 +256,7 @@ extends BaseCommand {
     @CommandPermission(value="simpban.unmuteip")
     @CommandCompletion(value="@players")
     @Description(value="解除玩家 IP 禁言（自动解析 IP）")
-    @Syntax(value="<player>")
+    @Syntax(value="<玩家>")
     public void onUnmuteIp(CommandSender sender, String targetName) {
         UUID uUID;
         OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer((String)targetName);
@@ -316,7 +306,7 @@ extends BaseCommand {
     @CommandPermission(value="simpban.kick")
     @CommandCompletion(value="@players")
     @Description(value="将玩家踢出服务器")
-    @Syntax(value="<player> [reason]")
+    @Syntax(value="<玩家> [原因]")
     public void onKick(CommandSender sender, String targetName, @Optional String reason) {
         UUID uUID;
         Player target = Bukkit.getPlayer((String)targetName);
@@ -354,8 +344,8 @@ extends BaseCommand {
     @CommandAlias(value="punish")
     @CommandPermission(value="simpban.punish")
     @CommandCompletion(value="@players")
-    @Description(value="打开玩家处罚 GUI")
-    @Syntax(value="<player>")
+    @Description(value="打开玩家处罚菜单界面")
+    @Syntax(value="<玩家>")
     public void onPunish(Player sender, String targetName) {
         OfflinePlayer target = Bukkit.getOfflinePlayer((String)targetName);
         if (!target.hasPlayedBefore() && !target.isOnline()) {
@@ -369,7 +359,7 @@ extends BaseCommand {
     @CommandPermission(value="simpban.history")
     @CommandCompletion(value="@players")
     @Description(value="查看玩家处罚历史")
-    @Syntax(value="<player>")
+    @Syntax(value="<玩家>")
     public void onHistory(Player sender, String targetName) {
         OfflinePlayer target = Bukkit.getOfflinePlayer((String)targetName);
         if (!target.hasPlayedBefore() && !target.isOnline()) {
@@ -379,7 +369,7 @@ extends BaseCommand {
         HistoryGUI.openAsync(this.plugin, sender, target);
     }
 
-    @Subcommand(value="reload")
+    @Subcommand(value="reload|重载")
     @CommandPermission(value="simpban.admin")
     @Description(value="重载插件配置")
     public void onReload(CommandSender sender) {
@@ -389,13 +379,13 @@ extends BaseCommand {
         sender.sendMessage(MessageUtil.toComponent("&aSimpBan 配置已重载。"));
     }
 
-    @Subcommand(value="help")
-    @CommandAlias(value="simpbanhelp|sbhelp")
+    @Subcommand(value="help|帮助")
+    @CommandAlias(value="simpbanhelp|sbhelp|simpban帮助|sb帮助")
     @CommandPermission(value="simpban.help")
     @Description(value="显示 SimpBan 命令帮助")
     public void onHelp(CommandSender sender) {
         String[] helpLines;
-        for (String line : helpLines = new String[]{"", "&8&m━━━━━━━━━━━━━━━━━━━━&r &c&lSimpBan 帮助 &8&m━━━━━━━━━━━━━━━━━━━━", "", "&c/ban &7<player> [reason] &8- &f永久封禁玩家", "&c/tempban &7<player> <duration> [reason] &8- &f临时封禁玩家", "&c/unban &7<player> &8- &f解除玩家封禁", "", "&e/mute &7<player> [reason] &8- &f永久禁言玩家", "&e/tempmute &7<player> <duration> [reason] &8- &f临时禁言玩家", "&e/unmute &7<player> &8- &f解除玩家禁言", "", "&d/banip &7<player> [reason] &8- &f封禁玩家 IP", "&d/tempbanip &7<player> <duration> [reason] &8- &f临时封禁玩家 IP", "&d/unbanip &7<player> &8- &f解除玩家 IP 封禁", "", "&b/muteip &7<player> [reason] &8- &f禁言玩家 IP", "&b/tempmuteip &7<player> <duration> [reason] &8- &f临时禁言玩家 IP", "&b/unmuteip &7<player> &8- &f解除玩家 IP 禁言", "", "&6/kick &7<player> [reason] &8- &f踢出玩家", "&a/punish &7<player> &8- &f打开处罚 GUI", "&a/history &7<player> &8- &f查看处罚历史", "", "&c/sb reload &8- &f重载配置", "&c/sb help &8- &f显示帮助菜单", "", "&7时长格式: &f1s, 30m, 6h, 7d, 4w, 1M, 1y", "&8&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", ""}) {
+        for (String line : helpLines = new String[]{"", "&8&m━━━━━━━━━━━━━━━━━━━━&r &c&lSimpBan 帮助 &8&m━━━━━━━━━━━━━━━━━━━━", "", "&c/ban &7<玩家> [原因] &8- &f永久封禁玩家", "&c/tempban &7<玩家> <时长> [原因] &8- &f临时封禁玩家", "&c/unban &7<玩家> &8- &f解除玩家封禁", "", "&e/mute &7<玩家> [原因] &8- &f永久禁言玩家", "&e/tempmute &7<玩家> <时长> [原因] &8- &f临时禁言玩家", "&e/unmute &7<玩家> &8- &f解除玩家禁言", "", "&d/banip &7<玩家> [原因] &8- &f封禁玩家 IP", "&d/tempbanip &7<玩家> <时长> [原因] &8- &f临时封禁玩家 IP", "&d/unbanip &7<玩家> &8- &f解除玩家 IP 封禁", "", "&b/muteip &7<玩家> [原因] &8- &f禁言玩家 IP", "&b/tempmuteip &7<玩家> <时长> [原因] &8- &f临时禁言玩家 IP", "&b/unmuteip &7<玩家> &8- &f解除玩家 IP 禁言", "", "&6/kick &7<玩家> [原因] &8- &f踢出玩家", "&a/punish &7<玩家> &8- &f打开处罚菜单界面", "&a/history &7<玩家> &8- &f查看处罚历史", "", "&c/sb 重载 &8- &f重载配置", "&c/sb 帮助 &8- &f显示帮助菜单", "", "&7时长格式: &f1s, 30m, 6h, 7d, 4w, 1M, 1y", "&8&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", ""}) {
             sender.sendMessage(MessageUtil.toComponent(line));
         }
     }

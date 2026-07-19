@@ -1,11 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  org.bukkit.Bukkit
- *  org.bukkit.entity.Entity
- *  org.bukkit.entity.Player
- */
 package me.simpmc.simpban.manager;
 
 import java.time.Instant;

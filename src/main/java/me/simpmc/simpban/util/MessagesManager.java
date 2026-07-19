@@ -1,12 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  org.bukkit.configuration.Configuration
- *  org.bukkit.configuration.file.FileConfiguration
- *  org.bukkit.configuration.file.YamlConfiguration
- *  org.bukkit.plugin.java.JavaPlugin
- */
 package me.simpmc.simpban.util;
 
 import java.io.File;

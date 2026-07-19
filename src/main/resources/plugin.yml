@@ -10,67 +10,67 @@ load: STARTUP
 commands:
   ban:
     description: 永久封禁玩家
-    usage: /ban <player> [reason]
+    usage: /ban <玩家> [原因]
     permission: simpban.ban
   tempban:
     description: 临时封禁玩家
-    usage: /tempban <player> <duration> [reason]
+    usage: /tempban <玩家> <时长> [原因]
     permission: simpban.tempban
   unban:
     description: 解除玩家封禁
-    usage: /unban <player>
+    usage: /unban <玩家>
     permission: simpban.unban
   banip:
     description: 永久封禁玩家 IP（自动解析 IP）
-    usage: /banip <player> [reason]
+    usage: /banip <玩家> [原因]
     permission: simpban.banip
   tempbanip:
     description: 临时封禁玩家 IP（自动解析 IP）
-    usage: /tempbanip <player> <duration> [reason]
+    usage: /tempbanip <玩家> <时长> [原因]
     permission: simpban.tempbanip
   unbanip:
     description: 解除玩家 IP 封禁（自动解析 IP）
-    usage: /unbanip <player>
+    usage: /unbanip <玩家>
     permission: simpban.unbanip
   mute:
     description: 永久禁言玩家
-    usage: /mute <player> [reason]
+    usage: /mute <玩家> [原因]
     permission: simpban.mute
   tempmute:
     description: 临时禁言玩家
-    usage: /tempmute <player> <duration> [reason]
+    usage: /tempmute <玩家> <时长> [原因]
     permission: simpban.tempmute
   unmute:
     description: 解除玩家禁言
-    usage: /unmute <player>
+    usage: /unmute <玩家>
     permission: simpban.unmute
   muteip:
     description: 永久禁言玩家 IP（自动解析 IP）
-    usage: /muteip <player> [reason]
+    usage: /muteip <玩家> [原因]
     permission: simpban.muteip
   tempmuteip:
     description: 临时禁言玩家 IP（自动解析 IP）
-    usage: /tempmuteip <player> <duration> [reason]
+    usage: /tempmuteip <玩家> <时长> [原因]
     permission: simpban.tempmuteip
   unmuteip:
     description: 解除玩家 IP 禁言（自动解析 IP）
-    usage: /unmuteip <player>
+    usage: /unmuteip <玩家>
     permission: simpban.unmuteip
   kick:
     description: 将玩家踢出服务器
-    usage: /kick <player> [reason]
+    usage: /kick <玩家> [原因]
     permission: simpban.kick
   punish:
-    description: 打开玩家处罚 GUI
-    usage: /punish <player>
+    description: 打开玩家处罚菜单界面
+    usage: /punish <玩家>
     permission: simpban.punish
   history:
     description: 查看玩家处罚历史
-    usage: /history <player>
+    usage: /history <玩家>
     permission: simpban.history
   simpban:
     description: SimpBan 管理命令
-    usage: /simpban <reload|help>
+    usage: /simpban <重载|帮助>
     permission: simpban.admin
     aliases: [sb]
 
@@ -115,7 +115,7 @@ permissions:
     description: 允许踢出玩家
     default: op
   simpban.punish:
-    description: 允许使用处罚 GUI
+    description: 允许使用处罚菜单界面
     default: op
   simpban.history:
     description: 允许查看处罚历史

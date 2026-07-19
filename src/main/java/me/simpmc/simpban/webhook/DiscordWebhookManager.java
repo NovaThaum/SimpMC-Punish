@@ -1,6 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- */
 package me.simpmc.simpban.webhook;
 
 import java.io.IOException;
@@ -48,13 +45,15 @@ public class DiscordWebhookManager {
 
     public void reload() {
         this.enabled = this.plugin.getConfig().getBoolean("discord.enabled", false);
-        this.webhookUrl = this.plugin.getConfig().getString("discord.webhook-url", "");
-        if (this.enabled && (this.webhookUrl == null || this.webhookUrl.isEmpty() || this.webhookUrl.equals("YOUR_WEBHOOK_URL_HERE"))) {
-            this.plugin.getLogger().warning("Discord Webhook 已启用，但未配置有效 URL！");
+        this.webhookUrl = this.plugin.getConfig().getString("discord.notification-url",
+                this.plugin.getConfig().getString("discord.webhook-url", ""));
+        if (this.enabled && (this.webhookUrl == null || this.webhookUrl.isEmpty()
+                || this.webhookUrl.equals("请填写 Discord 通知地址"))) {
+            this.plugin.getLogger().warning("Discord 通知已启用，但未配置有效 URL！");
             this.enabled = false;
         }
         if (this.enabled) {
-            this.plugin.getLogger().info("Discord Webhook 日志已启用。");
+            this.plugin.getLogger().info("Discord 通知日志已启用。");
         }
     }
 
@@ -165,7 +164,7 @@ public class DiscordWebhookManager {
             this.sendWebhook(json);
         }
         catch (Exception e) {
-            this.plugin.getLogger().warning("发送 Discord Webhook 失败: " + e.getMessage());
+            this.plugin.getLogger().warning("发送 Discord 通知失败: " + e.getMessage());
         }
     }
 
@@ -195,9 +194,6 @@ public class DiscordWebhookManager {
         return text.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t");
     }
 
-    /*
-     * WARNING - Removed try catching itself - possible behaviour change.
-     */
     private void sendWebhook(String json) throws IOException {
         URL url2 = URI.create(this.webhookUrl).toURL();
         HttpURLConnection connection = (HttpURLConnection)url2.openConnection();
@@ -214,9 +210,9 @@ public class DiscordWebhookManager {
             }
             int responseCode = connection.getResponseCode();
             if (responseCode == 429) {
-                this.plugin.getLogger().warning("Discord Webhook 触发限流，请考虑增大批量发送间隔。");
+                this.plugin.getLogger().warning("Discord 通知触发限流，请考虑增大批量发送间隔。");
             } else if (responseCode < 200 || responseCode >= 300) {
-                this.plugin.getLogger().warning("Discord Webhook 返回状态码: " + responseCode);
+                this.plugin.getLogger().warning("Discord 通知返回状态码: " + responseCode);
             }
         }
         finally {

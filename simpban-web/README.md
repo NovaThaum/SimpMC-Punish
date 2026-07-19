@@ -1,4 +1,4 @@
-# SimpBan Web 1.0
+# SimpBan 网页服务 1.0
 
 这是 SimpBan 的独立网页访问服务。它不再作为 Minecraft 插件内置网页运行，而是单独启动一个 JAR，通过 SimpBan 的数据库读取处罚记录。
 

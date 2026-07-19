@@ -1,6 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- */
 package me.simpmc.simpban.cache;
 
 import java.util.Optional;
