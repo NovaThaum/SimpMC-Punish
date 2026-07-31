@@ -2,9 +2,11 @@ package me.simpmc.simpban.commands;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import me.simpmc.simpban.SimpBan;
+import me.simpmc.simpban.database.PunishmentDAO.PunishmentPage;
 import me.simpmc.simpban.gui.HistoryGUI;
 import me.simpmc.simpban.gui.PunishmentGUI;
 import co.aikar.commands.BaseCommand;
@@ -29,6 +31,7 @@ import org.bukkit.entity.Player;
 @CommandAlias(value="simpban|sb")
 public class PunishmentCommands
 extends BaseCommand {
+    private static final int BAN_LIST_PAGE_SIZE = 10;
     private final SimpBan plugin;
 
     public PunishmentCommands(SimpBan plugin) {
@@ -369,6 +372,38 @@ extends BaseCommand {
         HistoryGUI.openAsync(this.plugin, sender, target);
     }
 
+    @CommandAlias(value="banlist")
+    @CommandPermission(value="simpban.banlist")
+    @Description(value="查看当前生效中的封禁列表")
+    @Syntax(value="[页码]")
+    public void onBanList(CommandSender sender, @Optional String pageInput) {
+        int page = 1;
+        if (pageInput != null && !pageInput.isBlank()) {
+            try {
+                page = Integer.parseInt(pageInput);
+            } catch (NumberFormatException ignored) {
+                sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("banlist.invalid-page")));
+                return;
+            }
+        }
+        if (page < 1) {
+            sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("banlist.invalid-page")));
+            return;
+        }
+
+        int requestedPage = page;
+        long offset = (requestedPage - 1L) * BAN_LIST_PAGE_SIZE;
+        this.plugin.getPunishmentDAO().getActiveBansPage(offset, BAN_LIST_PAGE_SIZE)
+            .whenComplete((result, error) -> this.runForSender(sender, () -> {
+                if (error != null) {
+                    sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("banlist.error")));
+                    this.plugin.getLogger().severe("读取封禁列表失败: " + error.getMessage());
+                    return;
+                }
+                this.sendBanList(sender, requestedPage, result);
+            }));
+    }
+
     @Subcommand(value="reload|重载")
     @CommandPermission(value="simpban.admin")
     @Description(value="重载插件配置")
@@ -384,9 +419,89 @@ extends BaseCommand {
     @CommandPermission(value="simpban.help")
     @Description(value="显示 SimpBan 命令帮助")
     public void onHelp(CommandSender sender) {
-        String[] helpLines;
-        for (String line : helpLines = new String[]{"", "&8&m━━━━━━━━━━━━━━━━━━━━&r &c&lSimpBan 帮助 &8&m━━━━━━━━━━━━━━━━━━━━", "", "&c/ban &7<玩家> [原因] &8- &f永久封禁玩家", "&c/tempban &7<玩家> <时长> [原因] &8- &f临时封禁玩家", "&c/unban &7<玩家> &8- &f解除玩家封禁", "", "&e/mute &7<玩家> [原因] &8- &f永久禁言玩家", "&e/tempmute &7<玩家> <时长> [原因] &8- &f临时禁言玩家", "&e/unmute &7<玩家> &8- &f解除玩家禁言", "", "&d/banip &7<玩家> [原因] &8- &f封禁玩家 IP", "&d/tempbanip &7<玩家> <时长> [原因] &8- &f临时封禁玩家 IP", "&d/unbanip &7<玩家> &8- &f解除玩家 IP 封禁", "", "&b/muteip &7<玩家> [原因] &8- &f禁言玩家 IP", "&b/tempmuteip &7<玩家> <时长> [原因] &8- &f临时禁言玩家 IP", "&b/unmuteip &7<玩家> &8- &f解除玩家 IP 禁言", "", "&6/kick &7<玩家> [原因] &8- &f踢出玩家", "&a/punish &7<玩家> &8- &f打开处罚菜单界面", "&a/history &7<玩家> &8- &f查看处罚历史", "", "&c/sb 重载 &8- &f重载配置", "&c/sb 帮助 &8- &f显示帮助菜单", "", "&7时长格式: &f1s, 30m, 6h, 7d, 4w, 1M, 1y", "&8&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", ""}) {
+        String[] helpLines = new String[]{
+            "",
+            "&8&m━━━━━━━━━━━━━━━━━━━━&r &c&lSimpBan 帮助 &8&m━━━━━━━━━━━━━━━━━━━━",
+            "",
+            "&c/ban &7<玩家> [原因] &8- &f永久封禁玩家",
+            "&c/tempban &7<玩家> <时长> [原因] &8- &f临时封禁玩家",
+            "&c/unban &7<玩家> &8- &f解除玩家封禁",
+            "&c/banlist &7[页码] &8- &f查看当前封禁列表",
+            "",
+            "&e/mute &7<玩家> [原因] &8- &f永久禁言玩家",
+            "&e/tempmute &7<玩家> <时长> [原因] &8- &f临时禁言玩家",
+            "&e/unmute &7<玩家> &8- &f解除玩家禁言",
+            "",
+            "&d/banip &7<玩家> [原因] &8- &f封禁玩家 IP",
+            "&d/tempbanip &7<玩家> <时长> [原因] &8- &f临时封禁玩家 IP",
+            "&d/unbanip &7<玩家> &8- &f解除玩家 IP 封禁",
+            "",
+            "&b/muteip &7<玩家> [原因] &8- &f禁言玩家 IP",
+            "&b/tempmuteip &7<玩家> <时长> [原因] &8- &f临时禁言玩家 IP",
+            "&b/unmuteip &7<玩家> &8- &f解除玩家 IP 禁言",
+            "",
+            "&6/kick &7<玩家> [原因] &8- &f踢出玩家",
+            "&a/punish &7<玩家> &8- &f打开处罚菜单界面",
+            "&a/history &7<玩家> &8- &f查看处罚历史",
+            "",
+            "&c/sb 重载 &8- &f重载配置",
+            "&c/sb 帮助 &8- &f显示帮助菜单",
+            "",
+            "&7时长格式: &f1s, 30m, 6h, 7d, 4w, 1M, 1y",
+            "&8&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+            ""
+        };
+        for (String line : helpLines) {
             sender.sendMessage(MessageUtil.toComponent(line));
+        }
+    }
+
+    private void sendBanList(CommandSender sender, int page, PunishmentPage result) {
+        int totalPages = result.total() == 0 ? 1 : (result.total() - 1) / BAN_LIST_PAGE_SIZE + 1;
+        if (page > totalPages) {
+            sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("banlist.page-out-of-range",
+                "{pages}", String.valueOf(totalPages))));
+            return;
+        }
+
+        sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("banlist.header",
+            "{page}", String.valueOf(page),
+            "{pages}", String.valueOf(totalPages),
+            "{total}", String.valueOf(result.total()))));
+        if (result.punishments().isEmpty()) {
+            sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("banlist.empty")));
+        } else {
+            int index = (page - 1) * BAN_LIST_PAGE_SIZE + 1;
+            for (Punishment punishment : result.punishments()) {
+                String target = punishment.getTargetName();
+                if (target == null || target.isBlank()) {
+                    target = punishment.getTargetIp() != null ? punishment.getTargetIp() : "未知目标";
+                } else if (punishment.getTargetIp() != null && !punishment.getTargetIp().isBlank()) {
+                    target += " (IP: " + punishment.getTargetIp() + ")";
+                }
+                List<String> lines = this.msg().getMessageList("banlist.entry",
+                    "{index}", String.valueOf(index++),
+                    "{target}", target,
+                    "{type}", punishment.getType().getDisplayName(),
+                    "{staff}", punishment.getStaffName() != null ? punishment.getStaffName() : "控制台",
+                    "{reason}", punishment.getReason() != null ? punishment.getReason() : "未填写原因",
+                    "{created}", TimeUtil.formatDate(punishment.getCreatedAt()),
+                    "{expires}", TimeUtil.formatRemaining(punishment.getExpiresAt()));
+                for (String line : lines) {
+                    sender.sendMessage(MessageUtil.toComponent(line));
+                }
+            }
+        }
+        sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("banlist.footer",
+            "{page}", String.valueOf(page),
+            "{pages}", String.valueOf(totalPages))));
+    }
+
+    private void runForSender(CommandSender sender, Runnable task) {
+        if (sender instanceof Player player) {
+            this.plugin.getSchedulerManager().runForEntity(player, task);
+        } else {
+            this.plugin.getSchedulerManager().runSync(task);
         }
     }
 
@@ -540,6 +655,7 @@ extends BaseCommand {
         }
         return ip2;
     }
+
 }
 
 

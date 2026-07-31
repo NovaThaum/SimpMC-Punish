@@ -118,6 +118,7 @@ public class DatabaseManager {
             this.createIndexSafe("idx_punishments_active", "punishments", "active, type");
             this.createIndexSafe("idx_punishments_expires", "punishments", "expires_at");
             this.createIndexSafe("idx_punishments_target_ip", "punishments", "target_ip");
+            this.createIndexSafe("idx_punishments_banlist_page", "punishments", "active, created_at, id, type, expires_at");
         })).exceptionally(e -> {
             this.plugin.getLogger().log(Level.SEVERE, "初始化数据库表失败", (Throwable)e);
             return null;
