@@ -17,6 +17,15 @@ import me.simpmc.simpban.model.Punishment;
 import me.simpmc.simpban.model.PunishmentType;
 
 public class PunishmentDAO {
+    private static final PunishmentType[] ACTIVE_BAN_TYPES = {
+        PunishmentType.BAN,
+        PunishmentType.TEMPBAN,
+        PunishmentType.BANIP,
+        PunishmentType.TEMPBANIP
+    };
+    private static final String ACTIVE_BAN_FILTER = "active = 1 "
+        + "AND (expires_at IS NULL OR expires_at > ?) "
+        + "AND type IN (" + placeholders(ACTIVE_BAN_TYPES.length) + ")";
     private final SimpBan plugin;
     private final DatabaseManager databaseManager;
 
@@ -162,6 +171,44 @@ public class PunishmentDAO {
             }
 
             return punishments;
+        });
+    }
+
+    public CompletableFuture<PunishmentPage> getActiveBansPage(long offset, int limit) {
+        if (offset < 0L || limit <= 0) {
+            throw new IllegalArgumentException("offset 不能小于 0，limit 必须大于 0");
+        }
+        return CompletableFuture.supplyAsync(() -> {
+            String sql = "SELECT page.*, totals.total_count "
+                + "FROM (SELECT COUNT(*) AS total_count FROM punishments WHERE " + ACTIVE_BAN_FILTER + ") totals "
+                + "LEFT JOIN (SELECT * FROM punishments WHERE " + ACTIVE_BAN_FILTER + " "
+                + "ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?) page ON 1 = 1 "
+                + "ORDER BY page.created_at DESC, page.id DESC";
+            ArrayList<Punishment> punishments = new ArrayList<>();
+            int total = 0;
+
+            try (Connection conn = this.databaseManager.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                long now = Instant.now().toEpochMilli();
+                int nextIndex = setActiveBanParameters(stmt, 1, now);
+                nextIndex = setActiveBanParameters(stmt, nextIndex, now);
+                stmt.setInt(nextIndex++, limit);
+                stmt.setLong(nextIndex, offset);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        total = rs.getInt("total_count");
+                        if (rs.getObject("id") != null) {
+                            punishments.add(this.mapResultSet(rs));
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                this.plugin.getLogger().log(Level.SEVERE, "读取生效中的封禁列表失败", e);
+                throw new RuntimeException(e);
+            }
+
+            return new PunishmentPage(punishments, total);
         });
     }
 
@@ -341,6 +388,12 @@ public class PunishmentDAO {
         }
     }
 
+    private static int setActiveBanParameters(PreparedStatement stmt, int startIndex, long now) throws SQLException {
+        stmt.setLong(startIndex++, now);
+        setTypes(stmt, startIndex, ACTIVE_BAN_TYPES);
+        return startIndex + ACTIVE_BAN_TYPES.length;
+    }
+
     private Punishment mapResultSet(ResultSet rs) throws SQLException {
         Punishment p = new Punishment();
         p.setId(rs.getInt("id"));
@@ -364,5 +417,14 @@ public class PunishmentDAO {
         p.setRemovedAt(rs.wasNull() ? null : Instant.ofEpochMilli(removedAt));
         p.setRemoveReason(rs.getString("remove_reason"));
         return p;
+    }
+
+    public record PunishmentPage(List<Punishment> punishments, int total) {
+        public PunishmentPage {
+            punishments = List.copyOf(punishments);
+            if (total < 0) {
+                throw new IllegalArgumentException("total 不能小于 0");
+            }
+        }
     }
 }

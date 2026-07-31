@@ -20,6 +20,12 @@ jobs:
     steps:
       - name: 检出源码
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 检查版本递增
+        if: github.event_name == 'pull_request'
+        run: python .github/scripts/check_versions.py "${{ github.event.pull_request.base.sha }}"
 
       - name: 设置 JDK 21
         uses: actions/setup-java@v4
@@ -34,10 +40,21 @@ jobs:
       - name: 构建独立网页服务 JAR
         run: mvn -B -f simpban-web/pom.xml clean package
 
+      - name: 定位构建产物
+        id: artifacts
+        shell: bash
+        run: |
+          plugin_jar=$(find target -maxdepth 1 -type f -name 'simpban-*.jar' ! -name 'original-*' -print -quit)
+          web_jar=$(find simpban-web/target -maxdepth 1 -type f -name 'simpban-web-*.jar' ! -name 'original-*' -print -quit)
+          test -n "$plugin_jar"
+          test -n "$web_jar"
+          echo "plugin_jar=$plugin_jar" >> "$GITHUB_OUTPUT"
+          echo "web_jar=$web_jar" >> "$GITHUB_OUTPUT"
+
       - name: 检查插件 JAR 不包含网页服务
         shell: bash
         run: |
-          if jar tf target/simpban-1.0.jar | grep -E 'me/simpmc/simpban/web/|public/|web/|index\.html|app\.js|styles\.css'; then
+          if jar tf "${{ steps.artifacts.outputs.plugin_jar }}" | grep -E 'me/simpmc/simpban/web/|public/|web/|index\.html|app\.js|styles\.css'; then
             echo "插件 JAR 中仍包含网页服务文件。"
             exit 1
           fi
@@ -45,13 +62,13 @@ jobs:
       - name: 上传插件 JAR
         uses: actions/upload-artifact@v4
         with:
-          name: simpban-plugin-1.0
-          path: target/simpban-1.0.jar
+          name: simpban-plugin
+          path: ${{ steps.artifacts.outputs.plugin_jar }}
           if-no-files-found: error
 
       - name: 上传网页服务 JAR
         uses: actions/upload-artifact@v4
         with:
-          name: simpban-web-1.0
-          path: simpban-web/target/simpban-web-1.0.jar
+          name: simpban-web
+          path: ${{ steps.artifacts.outputs.web_jar }}
           if-no-files-found: error

@@ -102,6 +102,18 @@ punishments:
       message: "&a{staff} &7解除了 &a{player} &7的 IP 禁言 (&f{ip}&7)"
     success: "&a已解除 {player} 的 IP 禁言"
 
+banlist:
+  header: "&8&m---------------- &c&l封禁列表 &8&m---------------- &7第 {page}/{pages} 页，共 {total} 条"
+  entry:
+    - "&8#{index} &c{target} &8- &f{type}"
+    - "&7  执行者: &f{staff} &8| &7剩余: &f{expires} &8| &7封禁时间: &f{created}"
+    - "&7  原因: &f{reason}"
+  empty: "&7当前没有生效中的封禁。"
+  footer: "&8&m-------------------------------------------------- &7使用 &f/banlist <页码> &7翻页"
+  invalid-page: "&c页码必须是大于 0 的整数。"
+  page-out-of-range: "&c该页不存在，当前共有 {pages} 页。"
+  error: "&c读取封禁列表失败，请查看控制台日志。"
+
 errors:
   player-not-found: "&c找不到该玩家。"
   player-not-online: "&c该玩家当前不在线。"

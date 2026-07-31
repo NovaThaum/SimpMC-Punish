@@ -1,5 +1,5 @@
 name: SimpBan
-version: '1.0'
+version: '${project.version}'
 main: me.simpmc.simpban.SimpBan
 api-version: '1.21'
 authors: [ GPT5.5, Minecraft0122, SimpMC ]
@@ -68,6 +68,10 @@ commands:
     description: 查看玩家处罚历史
     usage: /history <玩家>
     permission: simpban.history
+  banlist:
+    description: 查看当前生效中的封禁列表
+    usage: /banlist [页码]
+    permission: simpban.banlist
   simpban:
     description: SimpBan 管理命令
     usage: /simpban <重载|帮助>
@@ -120,6 +124,9 @@ permissions:
   simpban.history:
     description: 允许查看处罚历史
     default: op
+  simpban.banlist:
+    description: 允许查看当前生效中的封禁列表
+    default: op
   simpban.admin:
     description: 允许使用管理命令（重载等）
     default: op
@@ -148,4 +155,5 @@ permissions:
       simpban.kick: true
       simpban.punish: true
       simpban.history: true
+      simpban.banlist: true
       simpban.help: true
