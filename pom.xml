@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.simpmc</groupId>
-    <artifactId>simpban</artifactId>
-    <version>1.1.0</version>
+    <artifactId>simpmc-punish</artifactId>
+    <version>2.0.0</version>
     <packaging>jar</packaging>
 
-    <name>SimpBan</name>
+    <name>SimpMC-Punish</name>
     <description>面向 Minecraft 服务器的专业处罚管理插件</description>
 
     <developers>
@@ -58,31 +58,31 @@
                         <!-- FoliaLib -->
                         <relocation>
                             <pattern>com.tcoded.folialib</pattern>
-                            <shadedPattern>me.simpmc.simpban.lib.folialib</shadedPattern>
+                            <shadedPattern>me.simpmc.simpmcpunish.lib.folialib</shadedPattern>
                         </relocation>
                         <!-- Caffeine -->
                         <relocation>
                             <pattern>com.github.benmanes.caffeine</pattern>
-                            <shadedPattern>me.simpmc.simpban.lib.caffeine</shadedPattern>
+                            <shadedPattern>me.simpmc.simpmcpunish.lib.caffeine</shadedPattern>
                         </relocation>
                         <!-- HikariCP -->
                         <relocation>
                             <pattern>com.zaxxer.hikari</pattern>
-                            <shadedPattern>me.simpmc.simpban.lib.hikari</shadedPattern>
+                            <shadedPattern>me.simpmc.simpmcpunish.lib.hikari</shadedPattern>
                         </relocation>
                         <!-- ACF -->
                         <relocation>
                             <pattern>co.aikar.commands</pattern>
-                            <shadedPattern>me.simpmc.simpban.lib.acf</shadedPattern>
+                            <shadedPattern>me.simpmc.simpmcpunish.lib.acf</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.locales</pattern>
-                            <shadedPattern>me.simpmc.simpban.lib.locales</shadedPattern>
+                            <shadedPattern>me.simpmc.simpmcpunish.lib.locales</shadedPattern>
                         </relocation>
                         <!-- FastInv -->
                         <relocation>
                             <pattern>fr.mrmicky.fastinv</pattern>
-                            <shadedPattern>me.simpmc.simpban.lib.fastinv</shadedPattern>
+                            <shadedPattern>me.simpmc.simpmcpunish.lib.fastinv</shadedPattern>
                         </relocation>
                     </relocations>
                     <filters>

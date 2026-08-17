@@ -1,4 +1,4 @@
-# SimpBan 变更与版本规范
+# SimpMC-Punish 变更与版本规范
 
 本文档适用于所有提交到 `main` 分支的变更，包括代码、配置、构建脚本和文档。
 
@@ -8,8 +8,8 @@
 
 | 产物 | 影响范围 | 版本唯一来源 |
 | --- | --- | --- |
-| Minecraft 插件 | 除 `simpban-web/` 外的仓库内容 | 根目录 `pom.xml` 的 `project.version` |
-| 独立网页服务 | `simpban-web/` 下的内容 | `simpban-web/pom.xml` 的 `project.version` |
+| Minecraft 插件 | 除 `simpmc-punish-web/` 外的仓库内容 | 根目录 `pom.xml` 的 `project.version` |
+| 独立网页服务 | `simpmc-punish-web/` 下的内容 | `simpmc-punish-web/pom.xml` 的 `project.version` |
 
 插件的 `plugin.yml` 必须使用 `${project.version}`，由 Maven 资源过滤自动写入版本。不要在 `plugin.yml` 中重复维护固定版本号。
 
@@ -73,7 +73,7 @@ GitHub Actions 会在 PR 中根据变更路径检查版本是否已经提高。
 5. 更新 README、配置示例和命令帮助等相关文档。
 6. 运行相应构建：
    - 插件：`mvn -B clean package`
-   - 网页服务：`mvn -B -f simpban-web/pom.xml clean package`
+   - 网页服务：`mvn -B -f simpmc-punish-web/pom.xml clean package`
 7. 确认生成的 JAR 文件名和内部版本与 `pom.xml` 一致后再提交 PR。
 
 ## 提交前检查清单

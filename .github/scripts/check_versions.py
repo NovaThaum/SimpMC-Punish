@@ -118,8 +118,8 @@ def main() -> int:
         return 0
 
     product_paths = [path for path in changed_paths if not is_shared_path(path)]
-    plugin_changed = any(not path.startswith("simpban-web/") for path in product_paths)
-    web_changed = any(path.startswith("simpban-web/") for path in product_paths)
+    plugin_changed = any(not path.startswith("simpmc-punish-web/") for path in product_paths)
+    web_changed = any(path.startswith("simpmc-punish-web/") for path in product_paths)
 
     # 只有仓库级文件变化时，默认由插件版本承载该变更。
     if not plugin_changed and not web_changed:
@@ -134,7 +134,7 @@ def main() -> int:
             version = check_component("Minecraft 插件", "pom.xml", base_sha)
             updated_versions.append(("Minecraft 插件", version))
         if web_changed:
-            version = check_component("网页服务", "simpban-web/pom.xml", base_sha)
+            version = check_component("网页服务", "simpmc-punish-web/pom.xml", base_sha)
             updated_versions.append(("网页服务", version))
 
         changelog = Path("CHANGELOG.md").read_text(encoding="utf-8")

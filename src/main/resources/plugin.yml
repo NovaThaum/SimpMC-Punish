@@ -1,6 +1,6 @@
-name: SimpBan
+name: SimpMC-Punish
 version: '${project.version}'
-main: me.simpmc.simpban.SimpBan
+main: me.simpmc.simpmcpunish.SimpMCPunish
 api-version: '1.21'
 authors: [ GPT5.5, Minecraft0122, SimpMC ]
 description: 面向 Minecraft 服务器的专业处罚管理插件
@@ -11,149 +11,149 @@ commands:
   ban:
     description: 永久封禁玩家
     usage: /ban <玩家> [原因]
-    permission: simpban.ban
+    permission: simpmc-punish.ban
   tempban:
     description: 临时封禁玩家
     usage: /tempban <玩家> <时长> [原因]
-    permission: simpban.tempban
+    permission: simpmc-punish.tempban
   unban:
     description: 解除玩家封禁
     usage: /unban <玩家>
-    permission: simpban.unban
+    permission: simpmc-punish.unban
   banip:
     description: 永久封禁玩家 IP（自动解析 IP）
     usage: /banip <玩家> [原因]
-    permission: simpban.banip
+    permission: simpmc-punish.banip
   tempbanip:
     description: 临时封禁玩家 IP（自动解析 IP）
     usage: /tempbanip <玩家> <时长> [原因]
-    permission: simpban.tempbanip
+    permission: simpmc-punish.tempbanip
   unbanip:
     description: 解除玩家 IP 封禁（自动解析 IP）
     usage: /unbanip <玩家>
-    permission: simpban.unbanip
+    permission: simpmc-punish.unbanip
   mute:
     description: 永久禁言玩家
     usage: /mute <玩家> [原因]
-    permission: simpban.mute
+    permission: simpmc-punish.mute
   tempmute:
     description: 临时禁言玩家
     usage: /tempmute <玩家> <时长> [原因]
-    permission: simpban.tempmute
+    permission: simpmc-punish.tempmute
   unmute:
     description: 解除玩家禁言
     usage: /unmute <玩家>
-    permission: simpban.unmute
+    permission: simpmc-punish.unmute
   muteip:
     description: 永久禁言玩家 IP（自动解析 IP）
     usage: /muteip <玩家> [原因]
-    permission: simpban.muteip
+    permission: simpmc-punish.muteip
   tempmuteip:
     description: 临时禁言玩家 IP（自动解析 IP）
     usage: /tempmuteip <玩家> <时长> [原因]
-    permission: simpban.tempmuteip
+    permission: simpmc-punish.tempmuteip
   unmuteip:
     description: 解除玩家 IP 禁言（自动解析 IP）
     usage: /unmuteip <玩家>
-    permission: simpban.unmuteip
+    permission: simpmc-punish.unmuteip
   kick:
     description: 将玩家踢出服务器
     usage: /kick <玩家> [原因]
-    permission: simpban.kick
+    permission: simpmc-punish.kick
   punish:
     description: 打开玩家处罚菜单界面
     usage: /punish <玩家>
-    permission: simpban.punish
+    permission: simpmc-punish.punish
   history:
     description: 查看玩家处罚历史
     usage: /history <玩家>
-    permission: simpban.history
+    permission: simpmc-punish.history
   banlist:
     description: 查看当前生效中的封禁列表
     usage: /banlist [页码]
-    permission: simpban.banlist
-  simpban:
-    description: SimpBan 管理命令
-    usage: /simpban <重载|帮助>
-    permission: simpban.admin
-    aliases: [sb]
+    permission: simpmc-punish.banlist
+  simpmc-punish:
+    description: SimpMC-Punish 管理命令
+    usage: /simpmc-punish <重载|帮助>
+    permission: simpmc-punish.admin
+    aliases: [smp]
 
 permissions:
-  simpban.ban:
+  simpmc-punish.ban:
     description: 允许永久封禁玩家
     default: op
-  simpban.tempban:
+  simpmc-punish.tempban:
     description: 允许临时封禁玩家
     default: op
-  simpban.unban:
+  simpmc-punish.unban:
     description: 允许解除玩家封禁
     default: op
-  simpban.banip:
+  simpmc-punish.banip:
     description: 允许永久封禁玩家 IP
     default: op
-  simpban.tempbanip:
+  simpmc-punish.tempbanip:
     description: 允许临时封禁玩家 IP
     default: op
-  simpban.unbanip:
+  simpmc-punish.unbanip:
     description: 允许解除 IP 封禁
     default: op
-  simpban.mute:
+  simpmc-punish.mute:
     description: 允许永久禁言玩家
     default: op
-  simpban.tempmute:
+  simpmc-punish.tempmute:
     description: 允许临时禁言玩家
     default: op
-  simpban.unmute:
+  simpmc-punish.unmute:
     description: 允许解除玩家禁言
     default: op
-  simpban.muteip:
+  simpmc-punish.muteip:
     description: 允许永久禁言玩家 IP
     default: op
-  simpban.tempmuteip:
+  simpmc-punish.tempmuteip:
     description: 允许临时禁言玩家 IP
     default: op
-  simpban.unmuteip:
+  simpmc-punish.unmuteip:
     description: 允许解除 IP 禁言
     default: op
-  simpban.kick:
+  simpmc-punish.kick:
     description: 允许踢出玩家
     default: op
-  simpban.punish:
+  simpmc-punish.punish:
     description: 允许使用处罚菜单界面
     default: op
-  simpban.history:
+  simpmc-punish.history:
     description: 允许查看处罚历史
     default: op
-  simpban.banlist:
+  simpmc-punish.banlist:
     description: 允许查看当前生效中的封禁列表
     default: op
-  simpban.admin:
+  simpmc-punish.admin:
     description: 允许使用管理命令（重载等）
     default: op
-  simpban.help:
-    description: 允许查看 SimpBan 帮助
+  simpmc-punish.help:
+    description: 允许查看 SimpMC-Punish 帮助
     default: op
-  simpban.bypass:
+  simpmc-punish.bypass:
     description: 绕过所有处罚检查
     default: false
-  simpban.staff:
-    description: SimpBan 工作人员权限组
+  simpmc-punish.staff:
+    description: SimpMC-Punish 工作人员权限组
     default: op
     children:
-      simpban.ban: true
-      simpban.tempban: true
-      simpban.unban: true
-      simpban.banip: true
-      simpban.tempbanip: true
-      simpban.unbanip: true
-      simpban.mute: true
-      simpban.tempmute: true
-      simpban.unmute: true
-      simpban.muteip: true
-      simpban.tempmuteip: true
-      simpban.unmuteip: true
-      simpban.kick: true
-      simpban.punish: true
-      simpban.history: true
-      simpban.banlist: true
-      simpban.help: true
+      simpmc-punish.ban: true
+      simpmc-punish.tempban: true
+      simpmc-punish.unban: true
+      simpmc-punish.banip: true
+      simpmc-punish.tempbanip: true
+      simpmc-punish.unbanip: true
+      simpmc-punish.mute: true
+      simpmc-punish.tempmute: true
+      simpmc-punish.unmute: true
+      simpmc-punish.muteip: true
+      simpmc-punish.tempmuteip: true
+      simpmc-punish.unmuteip: true
+      simpmc-punish.kick: true
+      simpmc-punish.punish: true
+      simpmc-punish.history: true
+      simpmc-punish.banlist: true
+      simpmc-punish.help: true

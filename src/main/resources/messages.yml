@@ -1,4 +1,4 @@
-prefix: "&8[&c&lSimpBan&8]&r "
+prefix: "&8[&c&lSimpMC-Punish&8]&r "
 
 punishments:
   ban:
@@ -307,7 +307,7 @@ gui:
 input:
   reason:
     header: "&8&m----------------------------------------"
-    title: "&c&lSimpBan &8> &f输入处罚原因"
+    title: "&c&lSimpMC-Punish &8> &f输入处罚原因"
     target: "&7目标: &e{player}"
     type: "&7类型: {type}"
     duration: "&7时长: &f{duration}"
@@ -320,7 +320,7 @@ input:
 
   custom-duration:
     header: "&8&m----------------------------------------"
-    title: "&c&lSimpBan &8> &f输入自定义时长"
+    title: "&c&lSimpMC-Punish &8> &f输入自定义时长"
     format-header: "&7格式示例:"
     formats:
       - "&7  &e1h &7= 1 小时"

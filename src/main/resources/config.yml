@@ -1,11 +1,11 @@
-# SimpBan
+# SimpMC-Punish
 # 专业 Minecraft 处罚管理系统
 # 作者: GPT5.5, Minecraft0122, SimpMC
 
 # 绕过权限
 # 拥有该权限的玩家不会受到封禁、禁言和踢出影响。
 bypass:
-  permission: "simpban.bypass"
+  permission: "simpmc-punish.bypass"
 
 # 数据库配置
 # 数据库类型可选: sqlite, mysql
@@ -13,13 +13,13 @@ database:
   type: "sqlite"
 
   sqlite:
-    # 相对于 plugins/SimpBan 目录的 SQLite 数据库文件名。
+    # 相对于 plugins/SimpMC-Punish 目录的 SQLite 数据库文件名。
     file: "punishments.db"
 
   mysql:
     host: "localhost"
     port: 3306
-    database: "simpban"
+    database: "simpmc_punish"
     username: "root"
     password: "password"
     properties:
