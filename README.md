@@ -30,7 +30,7 @@ mvn package
 插件 JAR 输出位置：
 
 ```text
-target/simpmc-punish-<版本号>.jar
+target/SimpMC-Punish-<版本号>.jar
 ```
 
 ## 构建独立网页服务
@@ -69,4 +69,4 @@ java -jar simpmc-punish-web-2.0.0.jar --config config.yml
 
 ## 升级到 2.0.0
 
-此版本将产品名称、权限节点、管理命令和数据目录统一为 `SimpMC-Punish`，属于不兼容升级。停止服务器后，将旧目录中的 `plugins/SimpBan/punishments.db` 移动到 `plugins/SimpMC-Punish/punishments.db`；使用权限插件的服务器还需要将 `simpban.*` 替换为 `simpmc-punish.*`。管理命令改为 `/simpmc-punish`，可使用短别名 `/smp`。
+此版本将产品名称、权限节点、管理命令和数据目录统一为 `SimpMC-Punish`，属于不兼容升级。停止服务器后，将旧目录中的 `plugins/SimpBan/punishments.db` 移动到 `plugins/SimpMC-Punish/punishments.db`；使用权限插件的服务器还需要将 `simpban.*` 替换为 `simpmc-punish.*`。管理命令为 `/simpunish`，不提供 `/smp` 别名。

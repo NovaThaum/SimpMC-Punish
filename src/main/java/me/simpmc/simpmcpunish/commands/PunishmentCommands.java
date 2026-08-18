@@ -28,7 +28,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-@CommandAlias(value="simpmc-punish|smp")
+@CommandAlias(value="simpunish")
 public class PunishmentCommands
 extends BaseCommand {
     private static final int BAN_LIST_PAGE_SIZE = 10;
@@ -85,17 +85,22 @@ extends BaseCommand {
         }
         UUID staffUUID = uUID;
         String staffName = sender.getName();
-        this.plugin.getPunishmentManager().unban(target.getUniqueId(), staffUUID, staffName, "已解除封禁").thenAccept(success -> {
-            if (success.booleanValue()) {
-                if (this.msg().getConfig().getBoolean("punishments.unban.broadcast.enabled", true)) {
-                    String broadcastMsg = this.msg().getMessage("punishments.unban.broadcast.message", "{staff}", staffName, "{player}", targetName);
-                    this.broadcastStaff(broadcastMsg);
+        this.plugin.getPunishmentManager().unban(target.getUniqueId(), staffUUID, staffName, "已解除封禁").thenAccept(success ->
+            this.runForSender(sender, () -> {
+                if (success.booleanValue()) {
+                    boolean senderNotified = false;
+                    if (this.msg().getConfig().getBoolean("punishments.unban.broadcast.enabled", true)) {
+                        String broadcastMsg = this.msg().getMessage("punishments.unban.broadcast.message", "{staff}", staffName, "{player}", targetName);
+                        senderNotified = this.broadcastStaff(broadcastMsg, sender);
+                    }
+                    if (!senderNotified) {
+                        sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("punishments.unban.success", "{player}", targetName)));
+                    }
+                } else {
+                    sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("errors.not-banned", "{player}", targetName)));
                 }
-                sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("punishments.unban.success", "{player}", targetName)));
-            } else {
-                sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("errors.not-banned", "{player}", targetName)));
-            }
-        });
+            })
+        );
     }
 
     @CommandAlias(value="mute")
@@ -141,22 +146,27 @@ extends BaseCommand {
         }
         UUID staffUUID = uUID;
         String staffName = sender.getName();
-        this.plugin.getPunishmentManager().unmute(target.getUniqueId(), staffUUID, staffName, "已解除禁言").thenAccept(success -> {
-            if (success.booleanValue()) {
-                if (this.msg().getConfig().getBoolean("punishments.unmute.broadcast.enabled", true)) {
-                    String broadcastMsg = this.msg().getMessage("punishments.unmute.broadcast.message", "{staff}", staffName, "{player}", targetName);
-                    this.broadcastStaff(broadcastMsg);
+        this.plugin.getPunishmentManager().unmute(target.getUniqueId(), staffUUID, staffName, "已解除禁言").thenAccept(success ->
+            this.runForSender(sender, () -> {
+                if (success.booleanValue()) {
+                    boolean senderNotified = false;
+                    if (this.msg().getConfig().getBoolean("punishments.unmute.broadcast.enabled", true)) {
+                        String broadcastMsg = this.msg().getMessage("punishments.unmute.broadcast.message", "{staff}", staffName, "{player}", targetName);
+                        senderNotified = this.broadcastStaff(broadcastMsg, sender);
+                    }
+                    if (!senderNotified) {
+                        sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("punishments.unmute.success", "{player}", targetName)));
+                    }
+                    Player onlineTarget = Bukkit.getPlayer((UUID)target.getUniqueId());
+                    if (onlineTarget != null) {
+                        String notifyMsg = this.msg().getMessage("punishments.unmute.notify");
+                        this.plugin.getSchedulerManager().runForEntity((Entity)onlineTarget, () -> onlineTarget.sendMessage(MessageUtil.toComponent(notifyMsg)));
+                    }
+                } else {
+                    sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("errors.not-muted", "{player}", targetName)));
                 }
-                sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("punishments.unmute.success", "{player}", targetName)));
-                Player onlineTarget = Bukkit.getPlayer((UUID)target.getUniqueId());
-                if (onlineTarget != null) {
-                    String notifyMsg = this.msg().getMessage("punishments.unmute.notify");
-                    this.plugin.getSchedulerManager().runForEntity((Entity)onlineTarget, () -> onlineTarget.sendMessage(MessageUtil.toComponent(notifyMsg)));
-                }
-            } else {
-                sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("errors.not-muted", "{player}", targetName)));
-            }
-        });
+            })
+        );
     }
 
     @CommandAlias(value="banip")
@@ -219,17 +229,22 @@ extends BaseCommand {
     }
 
     private void executeUnbanIp(CommandSender sender, UUID targetUUID, String targetName, String ipAddress, UUID staffUUID, String staffName) {
-        this.plugin.getPunishmentManager().unbanIp(targetUUID, ipAddress, staffUUID, staffName, "已解除封禁").thenAccept(success -> {
-            if (success.booleanValue()) {
-                if (this.msg().getConfig().getBoolean("punishments.unbanip.broadcast.enabled", true)) {
-                    String broadcastMsg = this.msg().getMessage("punishments.unbanip.broadcast.message", "{staff}", staffName, "{player}", targetName, "{ip}", ipAddress);
-                    this.broadcastStaff(broadcastMsg);
+        this.plugin.getPunishmentManager().unbanIp(targetUUID, ipAddress, staffUUID, staffName, "已解除封禁").thenAccept(success ->
+            this.runForSender(sender, () -> {
+                if (success.booleanValue()) {
+                    boolean senderNotified = false;
+                    if (this.msg().getConfig().getBoolean("punishments.unbanip.broadcast.enabled", true)) {
+                        String broadcastMsg = this.msg().getMessage("punishments.unbanip.broadcast.message", "{staff}", staffName, "{player}", targetName, "{ip}", ipAddress);
+                        senderNotified = this.broadcastStaff(broadcastMsg, sender);
+                    }
+                    if (!senderNotified) {
+                        sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("punishments.unbanip.success", "{player}", targetName)));
+                    }
+                } else {
+                    sender.sendMessage(MessageUtil.toComponent("&c" + targetName + " 的 IP 当前没有被封禁。"));
                 }
-                sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("punishments.unbanip.success", "{player}", targetName)));
-            } else {
-                sender.sendMessage(MessageUtil.toComponent("&c" + targetName + " 的 IP 当前没有被封禁。"));
-            }
-        });
+            })
+        );
     }
 
     @CommandAlias(value="muteip")
@@ -292,17 +307,22 @@ extends BaseCommand {
     }
 
     private void executeUnmuteIp(CommandSender sender, UUID targetUUID, String targetName, String ipAddress, UUID staffUUID, String staffName) {
-        this.plugin.getPunishmentManager().unmuteIp(targetUUID, ipAddress, staffUUID, staffName, "已解除禁言").thenAccept(success -> {
-            if (success.booleanValue()) {
-                if (this.msg().getConfig().getBoolean("punishments.unmuteip.broadcast.enabled", true)) {
-                    String broadcastMsg = this.msg().getMessage("punishments.unmuteip.broadcast.message", "{staff}", staffName, "{player}", targetName, "{ip}", ipAddress);
-                    this.broadcastStaff(broadcastMsg);
+        this.plugin.getPunishmentManager().unmuteIp(targetUUID, ipAddress, staffUUID, staffName, "已解除禁言").thenAccept(success ->
+            this.runForSender(sender, () -> {
+                if (success.booleanValue()) {
+                    boolean senderNotified = false;
+                    if (this.msg().getConfig().getBoolean("punishments.unmuteip.broadcast.enabled", true)) {
+                        String broadcastMsg = this.msg().getMessage("punishments.unmuteip.broadcast.message", "{staff}", staffName, "{player}", targetName, "{ip}", ipAddress);
+                        senderNotified = this.broadcastStaff(broadcastMsg, sender);
+                    }
+                    if (!senderNotified) {
+                        sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("punishments.unmuteip.success", "{player}", targetName)));
+                    }
+                } else {
+                    sender.sendMessage(MessageUtil.toComponent("&c" + targetName + " 的 IP 当前没有被禁言。"));
                 }
-                sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("punishments.unmuteip.success", "{player}", targetName)));
-            } else {
-                sender.sendMessage(MessageUtil.toComponent("&c" + targetName + " 的 IP 当前没有被禁言。"));
-            }
-        });
+            })
+        );
     }
 
     @CommandAlias(value="kick")
@@ -331,17 +351,22 @@ extends BaseCommand {
         UUID staffUUID = uUID;
         String staffName = sender.getName();
         String finalReason = reason != null ? reason : "由管理员踢出";
-        this.plugin.getPunishmentManager().kick(target.getUniqueId(), target.getName(), staffUUID, staffName, finalReason).thenAccept(success -> {
-            if (success.booleanValue()) {
-                if (this.msg().getConfig().getBoolean("punishments.kick.broadcast.enabled", true)) {
-                    String broadcastMsg = this.msg().getMessage("punishments.kick.broadcast.message", "{staff}", staffName, "{player}", targetName, "{reason}", finalReason);
-                    this.broadcastStaff(broadcastMsg);
+        this.plugin.getPunishmentManager().kick(target.getUniqueId(), target.getName(), staffUUID, staffName, finalReason).thenAccept(success ->
+            this.runForSender(sender, () -> {
+                if (success.booleanValue()) {
+                    boolean senderNotified = false;
+                    if (this.msg().getConfig().getBoolean("punishments.kick.broadcast.enabled", true)) {
+                        String broadcastMsg = this.msg().getMessage("punishments.kick.broadcast.message", "{staff}", staffName, "{player}", targetName, "{reason}", finalReason);
+                        senderNotified = this.broadcastStaff(broadcastMsg, sender);
+                    }
+                    if (!senderNotified) {
+                        sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("punishments.kick.success", "{player}", targetName)));
+                    }
+                } else {
+                    sender.sendMessage(MessageUtil.toComponent("&c踢出 " + targetName + " 失败。"));
                 }
-                sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("punishments.kick.success", "{player}", targetName)));
-            } else {
-                sender.sendMessage(MessageUtil.toComponent("&c踢出 " + targetName + " 失败。"));
-            }
-        });
+            })
+        );
     }
 
     @CommandAlias(value="punish")
@@ -415,7 +440,6 @@ extends BaseCommand {
     }
 
     @Subcommand(value="help|帮助")
-    @CommandAlias(value="simpmc-punishhelp|smphelp|simpmc-punish帮助|smp帮助")
     @CommandPermission(value="simpmc-punish.help")
     @Description(value="显示 SimpMC-Punish 命令帮助")
     public void onHelp(CommandSender sender) {
@@ -444,8 +468,8 @@ extends BaseCommand {
             "&a/punish &7<玩家> &8- &f打开处罚菜单界面",
             "&a/history &7<玩家> &8- &f查看处罚历史",
             "",
-            "&c/simpmc-punish 重载 &8- &f重载配置",
-            "&c/simpmc-punish 帮助 &8- &f显示帮助菜单",
+            "&c/simpunish 重载 &8- &f重载配置",
+            "&c/simpunish 帮助 &8- &f显示帮助菜单",
             "",
             "&7时长格式: &f1s, 30m, 6h, 7d, 4w, 1M, 1y",
             "&8&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
@@ -538,7 +562,7 @@ extends BaseCommand {
         if (future == null) {
             return;
         }
-        future.thenAccept(punishment -> {
+        future.thenAccept(punishment -> this.runForSender(sender, () -> {
             String durationStr = durationMs > 0L ? TimeUtil.formatDuration(durationMs) : this.msg().getMessage("duration-permanent");
             String configPath = switch (type) {
                 case BAN -> "punishments.ban";
@@ -547,27 +571,36 @@ extends BaseCommand {
                 case TEMPMUTE -> "punishments.tempmute";
                 default -> null;
             };
+            boolean senderNotified = false;
             if (configPath != null && this.msg().getConfig().getBoolean(configPath + ".broadcast.enabled", true)) {
                 String broadcastMsg = this.msg().getMessage(configPath + ".broadcast.message", "{staff}", staffName, "{player}", targetName, "{reason}", finalReason, "{duration}", durationStr);
-                this.broadcastStaff(broadcastMsg);
+                senderNotified = this.broadcastStaff(broadcastMsg, sender);
             }
-            sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage(configPath + ".success", "{player}", targetName, "{duration}", durationStr)));
-        }).exceptionally(e -> {
-            sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("input.reason.error")));
+            if (!senderNotified) {
+                sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage(configPath + ".success", "{player}", targetName, "{duration}", durationStr)));
+            }
+        })).exceptionally(e -> {
+            this.runForSender(sender, () -> sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("input.reason.error"))));
             this.plugin.getLogger().severe("执行处罚失败: " + e.getMessage());
             return null;
         });
     }
 
-    private void broadcastStaff(String message) {
+    private boolean broadcastStaff(String message, CommandSender sender) {
         String prefix = this.msg().getPrefix();
         String formattedMessage = prefix + message;
+        boolean senderNotified = false;
         Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         for (Player player : players) {
             if (!player.hasPermission("simpmc-punish.staff")) continue;
             player.sendMessage(MessageUtil.toComponent(formattedMessage));
+            if (player.equals(sender)) {
+                senderNotified = true;
+            }
         }
-        Bukkit.getConsoleSender().sendMessage(MessageUtil.toComponent(formattedMessage));
+        CommandSender console = Bukkit.getConsoleSender();
+        console.sendMessage(MessageUtil.toComponent(formattedMessage));
+        return senderNotified || console.equals(sender);
     }
 
     private void executeIpPunishment(CommandSender sender, String targetName, PunishmentType type, long durationMs, String reason) {
@@ -623,7 +656,7 @@ extends BaseCommand {
         if (future == null) {
             return;
         }
-        future.thenAccept(punishment -> {
+        future.thenAccept(punishment -> this.runForSender(sender, () -> {
             String durationStr = durationMs > 0L ? TimeUtil.formatDuration(durationMs) : this.msg().getMessage("duration-permanent");
             String configPath = switch (type) {
                 case BANIP -> "punishments.banip";
@@ -632,13 +665,16 @@ extends BaseCommand {
                 case TEMPMUTEIP -> "punishments.tempmuteip";
                 default -> null;
             };
+            boolean senderNotified = false;
             if (configPath != null && this.msg().getConfig().getBoolean(configPath + ".broadcast.enabled", true)) {
                 String broadcastMsg = this.msg().getMessage(configPath + ".broadcast.message", "{staff}", staffName, "{player}", targetName, "{ip}", ipAddress, "{reason}", finalReason, "{duration}", durationStr);
-                this.broadcastStaff(broadcastMsg);
+                senderNotified = this.broadcastStaff(broadcastMsg, sender);
             }
-            sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage(configPath + ".success", "{player}", targetName, "{ip}", ipAddress, "{duration}", durationStr)));
-        }).exceptionally(e -> {
-            sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("input.reason.error")));
+            if (!senderNotified) {
+                sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage(configPath + ".success", "{player}", targetName, "{ip}", ipAddress, "{duration}", durationStr)));
+            }
+        })).exceptionally(e -> {
+            this.runForSender(sender, () -> sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("input.reason.error"))));
             this.plugin.getLogger().severe("执行 IP 处罚失败: " + e.getMessage());
             return null;
         });

@@ -6,7 +6,7 @@
 
     <groupId>me.simpmc</groupId>
     <artifactId>simpmc-punish</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <packaging>jar</packaging>
 
     <name>SimpMC-Punish</name>
@@ -31,6 +31,7 @@
 
     <build>
         <defaultGoal>clean package</defaultGoal>
+        <finalName>SimpMC-Punish-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -96,6 +97,11 @@
                         </filter>
                     </filters>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
             </plugin>
         </plugins>
         <resources>
@@ -200,6 +206,13 @@
             <artifactId>FastInv</artifactId>
             <version>3.1.2</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.11.4</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

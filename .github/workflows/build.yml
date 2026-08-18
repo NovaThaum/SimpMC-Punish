@@ -44,7 +44,7 @@ jobs:
         id: artifacts
         shell: bash
         run: |
-          plugin_jar=$(find target -maxdepth 1 -type f -name 'simpmc-punish-*.jar' ! -name 'original-*' -print -quit)
+          plugin_jar=$(find target -maxdepth 1 -type f -name 'SimpMC-Punish-*.jar' ! -name 'original-*' -print -quit)
           web_jar=$(find simpmc-punish-web/target -maxdepth 1 -type f -name 'simpmc-punish-web-*.jar' ! -name 'original-*' -print -quit)
           test -n "$plugin_jar"
           test -n "$web_jar"
@@ -62,13 +62,13 @@ jobs:
       - name: 上传插件 JAR
         uses: actions/upload-artifact@v4
         with:
-          name: simpmc-punish-plugin
+          name: SimpMC-Punish-plugin
           path: ${{ steps.artifacts.outputs.plugin_jar }}
           if-no-files-found: error
 
       - name: 上传网页服务 JAR
         uses: actions/upload-artifact@v4
         with:
-          name: simpmc-punish-web
+          name: SimpMC-Punish-web
           path: ${{ steps.artifacts.outputs.web_jar }}
           if-no-files-found: error

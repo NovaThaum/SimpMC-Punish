@@ -319,7 +319,8 @@ public class PunishmentManager {
 
     public String buildKickMessage(String playerName, String staffName, PunishmentType type, String reason, Instant expiresAt) {
         String template = type == PunishmentType.KICK ? this.msg().getMessage("punishments.kick.screen") : this.msg().getMessage("punishments.ban.screen");
-        return template.replace("{reason}", reason != null ? reason : "未填写原因").replace("{expires}", TimeUtil.formatRemaining(expiresAt)).replace("{player}", playerName != null ? playerName : "未知玩家").replace("{staff}", staffName != null ? staffName : "控制台");
+        String message = template.replace("{reason}", reason != null ? reason : "未填写原因").replace("{expires}", TimeUtil.formatRemaining(expiresAt)).replace("{player}", playerName != null ? playerName : "未知玩家").replace("{staff}", staffName != null ? staffName : "控制台");
+        return MessageUtil.compactLines(message);
     }
 }
 

@@ -3,6 +3,7 @@ package me.simpmc.simpmcpunish.util;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -32,6 +33,7 @@ public final class MessagesManager {
             YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration((Reader)new InputStreamReader(defaultStream, StandardCharsets.UTF_8));
             this.messagesConfig.setDefaults((Configuration)defaultConfig);
         }
+        this.migrateLegacyBranding();
     }
 
     public void reload() {
@@ -81,6 +83,30 @@ public final class MessagesManager {
 
     public FileConfiguration getConfig() {
         return this.messagesConfig;
+    }
+
+    private void migrateLegacyBranding() {
+        boolean changed = false;
+        for (String path : this.messagesConfig.getKeys(true)) {
+            if (!this.messagesConfig.isString(path)) {
+                continue;
+            }
+            String value = this.messagesConfig.getString(path);
+            if (value == null || !value.contains("SimpBan")) {
+                continue;
+            }
+            this.messagesConfig.set(path, value.replace("SimpBan", "SimpMC-Punish"));
+            changed = true;
+        }
+        if (!changed) {
+            return;
+        }
+        try {
+            this.messagesConfig.save(this.messagesFile);
+            this.plugin.getLogger().info("已将 messages.yml 中的旧 SimpBan 名称迁移为 SimpMC-Punish。");
+        } catch (IOException exception) {
+            this.plugin.getLogger().warning("无法保存 messages.yml 品牌迁移结果: " + exception.getMessage());
+        }
     }
 }
 

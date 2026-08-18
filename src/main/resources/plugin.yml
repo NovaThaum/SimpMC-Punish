@@ -72,11 +72,10 @@ commands:
     description: 查看当前生效中的封禁列表
     usage: /banlist [页码]
     permission: simpmc-punish.banlist
-  simpmc-punish:
+  simpunish:
     description: SimpMC-Punish 管理命令
-    usage: /simpmc-punish <重载|帮助>
+    usage: /simpunish <重载|帮助>
     permission: simpmc-punish.admin
-    aliases: [smp]
 
 permissions:
   simpmc-punish.ban:
