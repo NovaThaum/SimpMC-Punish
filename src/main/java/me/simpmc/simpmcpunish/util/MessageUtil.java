@@ -2,7 +2,6 @@ package me.simpmc.simpmcpunish.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -145,15 +144,6 @@ public final class MessageUtil {
         return result;
     }
 
-    public static String compactLines(String message) {
-        if (message == null || message.isBlank()) {
-            return message;
-        }
-        return message.lines()
-                .map(String::trim)
-                .filter(line -> !line.isEmpty())
-                .collect(Collectors.joining(" "));
-    }
 }
 
 

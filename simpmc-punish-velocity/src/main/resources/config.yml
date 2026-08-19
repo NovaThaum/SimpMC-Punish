@@ -1,0 +1,39 @@
+# SimpMC-Punish Velocity
+# 该模块只读取由 Paper 端 SimpMC-Punish 写入的共享 MySQL 数据库。
+
+database:
+  host: "localhost"
+  port: 3306
+  database: "simpmc_punish"
+  username: "root"
+  password: "password"
+  pool-size: 4
+  connection-timeout-ms: 5000
+  properties:
+    useSSL: false
+    allowPublicKeyRetrieval: true
+    serverTimezone: "UTC"
+    characterEncoding: "utf8"
+
+web:
+  enabled: true
+  host: "127.0.0.1"
+  port: 8080
+  name: "SimpMC-Punish 管理面板"
+
+sync:
+  # 定期读取活动封禁，使一个后端写入的封禁能作用于其他后端上的在线玩家。
+  interval-ms: 500
+
+behavior:
+  # true: 后端插件执行 kick 后，玩家从整个代理断开；false: 保留 Velocity 默认重定向行为。
+  disconnect-backend-kicks: true
+  # 数据库查询失败时是否拒绝登录。建议保持 false，避免数据库故障导致全网无法进入。
+  deny-login-on-database-error: false
+
+logging:
+  backend-kicks: true
+  denied-login-attempts: false
+  denied-login-rate-limit-seconds: 30
+  database-error-rate-limit-seconds: 30
+  max-reason-length: 240

@@ -4,12 +4,12 @@
 
 ## 仓库中的版本
 
-本仓库包含两个独立发布的产物，它们分别维护版本号：
+本仓库包含两个运行组件，它们分别维护版本号：
 
 | 产物 | 影响范围 | 版本唯一来源 |
 | --- | --- | --- |
-| Minecraft 插件 | 除 `simpmc-punish-web/` 外的仓库内容 | 根目录 `pom.xml` 的 `project.version` |
-| 独立网页服务 | `simpmc-punish-web/` 下的内容 | `simpmc-punish-web/pom.xml` 的 `project.version` |
+| Paper/Folia 插件 | `src/`、根目录构建和文档 | 根目录 `pom.xml` 的 `project.version` |
+| Velocity 插件 | `simpmc-punish-velocity/` | `simpmc-punish-velocity/pom.xml` 的 `project.version` |
 
 插件的 `plugin.yml` 必须使用 `${project.version}`，由 Maven 资源过滤自动写入版本。不要在 `plugin.yml` 中重复维护固定版本号。
 
@@ -17,7 +17,7 @@
 
 - 每个准备合并的 PR 或完整变更集必须更新受影响产物的版本号。
 - 一个变更集只更新一次版本；开发过程中的临时提交不需要逐个递增。
-- 同时修改插件和网页服务时，两个产物都必须分别更新版本。
+- 同时修改 Paper 和 Velocity 时，两个产物都必须分别更新版本。
 - 只修改文档、CI、构建配置或仓库级文件时，也必须为对应产物递增补丁版本。
 - 新版本必须大于仓库中的旧版本，已经发布过的版本号不得重复使用。
 - 每次更新版本时必须同步更新 `CHANGELOG.md`；涉及使用方式时，还应同步更新相关 README。
@@ -66,14 +66,14 @@ GitHub Actions 会在 PR 中根据变更路径检查版本是否已经提高。
 
 ## 变更流程
 
-1. 明确本次变更影响插件、网页服务还是两者。
+1. 明确本次变更影响 Paper、Velocity 还是两者。
 2. 根据最高影响级别选择 `MAJOR`、`MINOR` 或 `PATCH`。
 3. 更新受影响产物 `pom.xml` 中的版本。
 4. 在 `CHANGELOG.md` 顶部记录版本、日期和用户可感知的变化。
 5. 更新 README、配置示例和命令帮助等相关文档。
 6. 运行相应构建：
    - 插件：`mvn -B clean package`
-   - 网页服务：`mvn -B -f simpmc-punish-web/pom.xml clean package`
+   - Velocity：`mvn -B -f simpmc-punish-velocity/pom.xml clean package`
 7. 确认生成的 JAR 文件名和内部版本与 `pom.xml` 一致后再提交 PR。
 
 ## 提交前检查清单

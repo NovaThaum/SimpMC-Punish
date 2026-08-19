@@ -1,0 +1,12 @@
+ban-screen: |-
+  <red><bold>你已被封禁</bold></red>
+
+  <gray>玩家: <white><player></white></gray>
+  <gray>执行者: <white><staff></white></gray>
+  <gray>原因: <white><reason></white></gray>
+  <gray>到期: <white><expires></white></gray>
+
+  <gray>如需申诉，请联系服务器管理组。</gray>
+
+kick-fallback: "<red>你已被后端服务器踢出。</red>"
+database-error: "<red>处罚数据库暂时不可用，请稍后重试。</red>"

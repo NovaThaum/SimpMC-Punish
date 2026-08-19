@@ -1,4 +1,4 @@
-package me.simpmc.simpmcpunish.webapp;
+package me.simpmc.simpmcpunish.velocity;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,15 +10,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class PunishmentRepository {
-    private final Database database;
+public final class VelocityPunishmentRepository {
+    private final VelocityDatabase database;
 
-    public PunishmentRepository(Database database) {
+    public VelocityPunishmentRepository(VelocityDatabase database) {
         this.database = database;
     }
 
-    public List<PunishmentRecord> recent(int limit) throws SQLException {
-        String sql = "SELECT * FROM punishments ORDER BY created_at DESC LIMIT ?";
+    public List<VelocityPunishmentRecord> recent(int limit) throws SQLException {
+        String sql = "SELECT * FROM punishments ORDER BY created_at DESC, id DESC LIMIT ?";
         try (Connection connection = this.database.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, clampLimit(limit));
@@ -26,13 +26,13 @@ public final class PunishmentRepository {
         }
     }
 
-    public List<PunishmentRecord> search(String query, int limit) throws SQLException {
+    public List<VelocityPunishmentRecord> search(String query, int limit) throws SQLException {
         String sql = """
                 SELECT * FROM punishments
                 WHERE LOWER(target_name) LIKE LOWER(?)
                    OR target_uuid = ?
                    OR target_ip LIKE ?
-                ORDER BY created_at DESC
+                ORDER BY created_at DESC, id DESC
                 LIMIT ?
                 """;
         String like = "%" + query + "%";
@@ -74,11 +74,11 @@ public final class PunishmentRepository {
         }
     }
 
-    private static List<PunishmentRecord> records(PreparedStatement statement) throws SQLException {
-        ArrayList<PunishmentRecord> records = new ArrayList<>();
+    private static List<VelocityPunishmentRecord> records(PreparedStatement statement) throws SQLException {
+        List<VelocityPunishmentRecord> records = new ArrayList<>();
         try (ResultSet result = statement.executeQuery()) {
             while (result.next()) {
-                records.add(PunishmentRecord.from(result));
+                records.add(VelocityPunishmentRecord.from(result));
             }
         }
         return records;

@@ -8,9 +8,9 @@ bypass:
   permission: "simpmc-punish.bypass"
 
 # 数据库配置
-# 数据库类型可选: sqlite, mysql
+# Velocity 全网部署必须使用 MySQL；SQLite 仅保留给不安装 Velocity 的单服部署。
 database:
-  type: "sqlite"
+  type: "mysql"
 
   sqlite:
     # 相对于 plugins/SimpMC-Punish 目录的 SQLite 数据库文件名。

@@ -96,7 +96,11 @@ def is_shared_path(path: str) -> bool:
 
 
 def check_component(name: str, path: str, base_sha: str) -> str:
-    old_text = base_pom_version(base_sha, path)
+    try:
+        old_text = base_pom_version(base_sha, path)
+    except subprocess.CalledProcessError:
+        # 新增组件在 base commit 中没有 POM，按 0.0.0 校验首次版本。
+        old_text = "0.0.0"
     new_text = current_pom_version(path)
     old_version = SemVer.parse(old_text, allow_legacy=True)
     new_version = SemVer.parse(new_text)
@@ -118,11 +122,11 @@ def main() -> int:
         return 0
 
     product_paths = [path for path in changed_paths if not is_shared_path(path)]
-    plugin_changed = any(not path.startswith("simpmc-punish-web/") for path in product_paths)
-    web_changed = any(path.startswith("simpmc-punish-web/") for path in product_paths)
+    plugin_changed = any(not path.startswith("simpmc-punish-velocity/") for path in product_paths)
+    velocity_changed = any(path.startswith("simpmc-punish-velocity/") for path in product_paths)
 
     # 只有仓库级文件变化时，默认由插件版本承载该变更。
-    if not plugin_changed and not web_changed:
+    if not plugin_changed and not velocity_changed:
         plugin_changed = True
 
     try:
@@ -133,9 +137,9 @@ def main() -> int:
         if plugin_changed:
             version = check_component("Minecraft 插件", "pom.xml", base_sha)
             updated_versions.append(("Minecraft 插件", version))
-        if web_changed:
-            version = check_component("网页服务", "simpmc-punish-web/pom.xml", base_sha)
-            updated_versions.append(("网页服务", version))
+        if velocity_changed:
+            version = check_component("Velocity 插件", "simpmc-punish-velocity/pom.xml", base_sha)
+            updated_versions.append(("Velocity 插件", version))
 
         changelog = Path("CHANGELOG.md").read_text(encoding="utf-8")
         for name, version in updated_versions:

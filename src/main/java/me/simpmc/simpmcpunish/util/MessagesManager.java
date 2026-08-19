@@ -13,6 +13,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class MessagesManager {
+    private static final String V2_BAN_SCREEN = "&c你已被封禁: &f{reason} &8| &7到期: &f{expires}";
+    private static final String V2_KICK_SCREEN = "&6你已被踢出服务器: &f{reason}";
     private final JavaPlugin plugin;
     private FileConfiguration messagesConfig;
     private File messagesFile;
@@ -29,11 +31,12 @@ public final class MessagesManager {
         }
         this.messagesConfig = YamlConfiguration.loadConfiguration((File)this.messagesFile);
         InputStream defaultStream = this.plugin.getResource("messages.yml");
+        YamlConfiguration defaultConfig = null;
         if (defaultStream != null) {
-            YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration((Reader)new InputStreamReader(defaultStream, StandardCharsets.UTF_8));
+            defaultConfig = YamlConfiguration.loadConfiguration((Reader)new InputStreamReader(defaultStream, StandardCharsets.UTF_8));
             this.messagesConfig.setDefaults((Configuration)defaultConfig);
         }
-        this.migrateLegacyBranding();
+        this.migrateLegacyValues(defaultConfig);
     }
 
     public void reload() {
@@ -85,7 +88,7 @@ public final class MessagesManager {
         return this.messagesConfig;
     }
 
-    private void migrateLegacyBranding() {
+    private void migrateLegacyValues(YamlConfiguration defaults) {
         boolean changed = false;
         for (String path : this.messagesConfig.getKeys(true)) {
             if (!this.messagesConfig.isString(path)) {
@@ -98,12 +101,20 @@ public final class MessagesManager {
             this.messagesConfig.set(path, value.replace("SimpBan", "SimpMC-Punish"));
             changed = true;
         }
+        if (defaults != null && V2_BAN_SCREEN.equals(this.messagesConfig.getString("punishments.ban.screen"))) {
+            this.messagesConfig.set("punishments.ban.screen", defaults.getString("punishments.ban.screen"));
+            changed = true;
+        }
+        if (defaults != null && V2_KICK_SCREEN.equals(this.messagesConfig.getString("punishments.kick.screen"))) {
+            this.messagesConfig.set("punishments.kick.screen", defaults.getString("punishments.kick.screen"));
+            changed = true;
+        }
         if (!changed) {
             return;
         }
         try {
             this.messagesConfig.save(this.messagesFile);
-            this.plugin.getLogger().info("已将 messages.yml 中的旧 SimpBan 名称迁移为 SimpMC-Punish。");
+            this.plugin.getLogger().info("已迁移 messages.yml 中的旧品牌或 2.x 断开页面默认值。");
         } catch (IOException exception) {
             this.plugin.getLogger().warning("无法保存 messages.yml 品牌迁移结果: " + exception.getMessage());
         }

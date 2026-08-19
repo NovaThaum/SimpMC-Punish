@@ -2,6 +2,17 @@
 
 本项目的版本更新遵循 [SimpMC-Punish 变更与版本规范](CONTRIBUTING.md)。
 
+## [3.0.0] - 2026-08-19
+
+### 不兼容变更
+
+- 新增可独立部署的 `SimpMC-Punish-Velocity` 组件；Paper 端写入处罚，Velocity 端只读共享 MySQL 并执行全网封禁同步。
+- 管理网页已合并到 Velocity JAR，移除独立 `simpmc-punish-web` 服务和单独启动方式。
+- Velocity 负责登录、切服阶段的封禁拦截，以及后端 kick 的统一断开处理；数据库故障默认 fail-open，可配置为拒绝登录。
+- Paper 与 Velocity 组件版本统一为 `3.0.0`，部署时必须使用同一 MySQL 数据库。
+- 为彻底消除 Velocity 原生多行 kick 日志，部署时需将 `velocity.toml` 的 `log-player-connections` 设为 `false`；Velocity 组件会保留单条压平审计日志。
+- 玩家端 kick/ban 断开页面恢复为可配置多行内容；2.0.1 的精确默认单行模板会自动迁移，自定义模板保持不变。
+
 ## [2.0.1] - 2026-08-18
 
 ### 修复
