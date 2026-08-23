@@ -35,6 +35,9 @@ public final class PunishmentListener implements Listener {
         UUID uuid = event.getUniqueId();
         String name = event.getName();
         String ipAddress = normalizeIp(event.getAddress().getHostAddress());
+        if (!this.plugin.getDatabaseManager().isConnected()) {
+            return;
+        }
         try {
             Optional<Punishment> activeBan = this.plugin.getPunishmentManager()
                     .getActiveBan(uuid)

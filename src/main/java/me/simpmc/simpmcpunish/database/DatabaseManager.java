@@ -20,7 +20,7 @@ public class DatabaseManager {
         this.plugin = plugin;
     }
 
-    public void initialize() {
+    public boolean initialize() {
         this.databaseType = this.plugin.getConfig().getString("database.type", "sqlite").toLowerCase();
         this.plugin.getLogger().info("正在初始化数据库类型: " + this.databaseType);
         try {
@@ -35,9 +35,12 @@ public class DatabaseManager {
             });
             this.plugin.getLogger().info("数据库连接池已初始化（" + this.databaseType.toUpperCase() + "）");
             this.initializeTables();
+            return true;
         }
         catch (Exception e) {
+            this.dataSource = null;
             this.plugin.getLogger().log(Level.SEVERE, "初始化数据库连接池失败", e);
+            return false;
         }
     }
 

@@ -52,7 +52,11 @@ public final class SimpMCPunish extends JavaPlugin {
         this.schedulerManager = new SchedulerManager(this);
         this.getLogger().info("调度器已初始化" + (this.schedulerManager.isFolia() ? " (Folia 模式)" : " (Bukkit 模式)"));
         this.databaseManager = new DatabaseManager(this);
-        this.databaseManager.initialize();
+        if (!this.databaseManager.initialize()) {
+            this.getLogger().severe("数据库初始化失败，SimpMC-Punish 将停止启用以避免重复刷屏。请检查数据库配置和连接状态。");
+            this.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         this.getLogger().info("数据库已初始化");
         this.punishmentDAO = new PunishmentDAO(this, this.databaseManager);
         this.cacheManager = new CacheManager(this);
