@@ -33,6 +33,23 @@ plugins/SimpMC-Punish-Velocity-<版本号>.jar
 
 放入 Velocity 的 `plugins/` 目录即可。网页、网页接口和数据库查询都由这份 Velocity JAR 提供，不再存在单独的 Web JAR 或 Web 进程。
 
+新安装默认使用 Minecraft 原版可翻译封禁组件，与 Essentials/Bukkit 原生封禁一致。Velocity 开启连接日志时，临时玩家封禁会在控制台显示：
+
+```text
+multiplayer.disconnect.banned.reasonmultiplayer.disconnect.banned.expiration
+```
+
+这是代理端对原版翻译组件的纯文本表示；玩家客户端仍会按自身语言显示实际的封禁原因和到期时间。永久玩家封禁和踢出只包含 `multiplayer.disconnect.banned.reason`，踢出不会追加到期翻译键。
+
+为避免升级时静默覆盖已有自定义封禁页，旧版 `config.yml` 若没有下面这个配置项，会继续使用 `messages.yml` 中的原有模板。要启用原版组件，请在 Paper 和 Velocity 两端各自的 `config.yml` 中添加：
+
+```yaml
+behavior:
+  vanilla-ban-components: true
+```
+
+设为 `false` 可随时恢复对应 `messages.yml` 中的自定义封禁页和踢出页。
+
 如果数据库连接失败，Paper 插件会记录初始化原因并自动停用，不会继续注册封禁登录检查，也不会为每次玩家登录重复打印“数据库尚未初始化”。修正数据库地址、端口、库名、账号或密码后重启服务器即可。
 
 ## 开发与版本
@@ -74,13 +91,13 @@ plugins/simpmc-punish-velocity/messages.yml
 
 Velocity 组件必须连接 Paper 端使用的同一个 MySQL 数据库，不能读取 Paper 端的 SQLite 文件。管理网页默认只监听 `127.0.0.1:8080`，访问 `/` 即可；生产环境建议通过反向代理或受限网络暴露。
 
-为避免 Velocity 在插件接管前按多行理由输出后端 kick 日志，请在 `velocity.toml` 中设置：
+要让 Velocity 控制台显示上述原版翻译键，请在 `velocity.toml` 中保持：
 
 ```toml
-log-player-connections = false
+log-player-connections = true
 ```
 
-然后完整重启 Velocity。SimpMC-Punish-Velocity 会为后端 kick 保留一条压平后的审计日志；该设置同时会关闭 Velocity 自身的连接/断开日志。
+修改后需要完整重启 Velocity。若设为 `false`，Velocity 会关闭自身的连接和断开日志，因此也不会输出上述翻译键；插件仍会按 `logging.backend-kicks` 记录未匹配到处罚记录的后端 kick。
 
 ## 升级到 3.0.0
 

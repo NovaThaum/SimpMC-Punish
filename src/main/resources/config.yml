@@ -7,6 +7,12 @@
 bypass:
   permission: "simpmc-punish.bypass"
 
+# 封禁断开页
+behavior:
+  # true: 封禁与踢出都使用 Minecraft 原版可翻译组件；Velocity 连接日志会显示原版翻译键。
+  # false: 继续使用 messages.yml 中可自定义的 punishments.ban.screen 与 punishments.kick.screen。
+  vanilla-ban-components: true
+
 # 数据库配置
 # Velocity 全网部署必须使用 MySQL；SQLite 仅保留给不安装 Velocity 的单服部署。
 database:

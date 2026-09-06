@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 @Plugin(
         id = "simpmc-punish-velocity",
         name = "SimpMC-Punish Velocity",
-        version = "3.0.0",
+        version = "3.1.0",
         description = "SimpMC-Punish 的 Velocity 全网处罚执行与管理面板",
         authors = {"GPT5.5", "Minecraft0122", "SimpMC"})
 public final class SimpMCPunishVelocity {
@@ -175,7 +175,10 @@ public final class SimpMCPunishVelocity {
         try {
             VelocityConfiguration loaded = VelocityConfiguration.load(this.dataDirectory, this.logger);
             VelocityMessages messages = VelocityMessages.load(this.dataDirectory);
-            VelocityMessageRenderer messageRenderer = new VelocityMessageRenderer(messages, loaded.maxReasonLength());
+            VelocityMessageRenderer messageRenderer = new VelocityMessageRenderer(
+                    messages,
+                    loaded.maxReasonLength(),
+                    loaded.vanillaBanComponents());
             this.configuration = loaded;
             this.renderer = messageRenderer;
             VelocityDatabase loadedDatabase = new VelocityDatabase(loaded, this.logger);
@@ -194,8 +197,10 @@ public final class SimpMCPunishVelocity {
                 this.logger.info("SimpMC-Punish 管理面板已启动: http://{}:{}", loaded.webHost(), loaded.webPort());
             }
             this.logger.info("SimpMC-Punish Velocity 已启动，共享 MySQL 处罚同步已启用");
-            this.logger.info("请确认 velocity.toml 已设置 log-player-connections=false；"
-                    + "本插件会为后端 kick 保留一条压平后的审计日志。");
+            if (loaded.vanillaBanComponents()) {
+                this.logger.info("原版封禁组件已启用；如需在控制台查看其翻译键，"
+                        + "请保持 velocity.toml 的 log-player-connections=true。");
+            }
         } catch (Exception error) {
             this.logger.error("SimpMC-Punish Velocity 初始化失败，插件保持 fail-open: {}", error.getMessage(), error);
         }

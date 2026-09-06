@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import me.simpmc.simpmcpunish.SimpMCPunish;
 import me.simpmc.simpmcpunish.model.Punishment;
-import me.simpmc.simpmcpunish.util.MessageUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -47,12 +46,12 @@ public final class PunishmentListener implements Listener {
                 if (!punishment.isExpired()) {
                     event.disallow(
                             AsyncPlayerPreLoginEvent.Result.KICK_BANNED,
-                            MessageUtil.toComponent(this.plugin.getPunishmentManager().buildKickMessage(
+                            this.plugin.getPunishmentManager().buildDisconnectMessage(
                                     punishment.getTargetName(),
                                     punishment.getStaffName(),
                                     punishment.getType(),
                                     punishment.getReason(),
-                                    punishment.getExpiresAt())));
+                                    punishment.getExpiresAt()));
                     return;
                 }
                 this.plugin.getCacheManager().invalidateBan(uuid);
@@ -66,12 +65,12 @@ public final class PunishmentListener implements Listener {
                 if (!punishment.isExpired()) {
                     event.disallow(
                             AsyncPlayerPreLoginEvent.Result.KICK_BANNED,
-                            MessageUtil.toComponent(this.plugin.getPunishmentManager().buildKickMessage(
+                            this.plugin.getPunishmentManager().buildDisconnectMessage(
                                     punishment.getTargetName(),
                                     punishment.getStaffName(),
                                     punishment.getType(),
                                     punishment.getReason(),
-                                    punishment.getExpiresAt())));
+                                    punishment.getExpiresAt()));
                     return;
                 }
                 this.plugin.getCacheManager().invalidateIpBan(ipAddress);

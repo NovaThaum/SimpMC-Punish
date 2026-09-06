@@ -2,6 +2,26 @@
 
 本项目的版本更新遵循 [SimpMC-Punish 变更与版本规范](CONTRIBUTING.md)。
 
+## [3.1.1] - 2026-09-06
+
+### 优化
+
+- Paper/Folia 开启 `behavior.vanilla-ban-components` 后，踢出玩家的断开消息同样改用 Minecraft 原版可翻译组件 `multiplayer.disconnect.banned.reason`，玩家客户端会按自身语言显示踢出原因；踢出没有到期时间，因此不会追加 `multiplayer.disconnect.banned.expiration`。
+- 关闭该开关时，踢出仍使用 `messages.yml` 中的 `punishments.kick.screen` 模板。
+
+## [3.1.0] - 2026-09-05
+
+### 新增
+
+- Paper/Folia 与 Velocity 新增 `behavior.vanilla-ban-components` 开关；新安装默认开启，旧配置缺少该项时继续使用原有自定义封禁页。
+
+### 优化
+
+- 启用新开关后，Paper/Folia 与 Velocity 的封禁断开消息改用 Minecraft 原版可翻译组件，与 Essentials/Bukkit 原生封禁行为一致。
+- 临时玩家封禁在 Velocity 控制台中会显示 `multiplayer.disconnect.banned.reasonmultiplayer.disconnect.banned.expiration`，玩家客户端仍会按自身语言显示封禁原因和到期时间。
+- 永久玩家封禁只使用 `multiplayer.disconnect.banned.reason`，不会追加到期翻译键。
+- 修正部署说明，不再要求关闭会输出上述翻译键的 Velocity 原生连接日志。
+
 ## [3.0.1] - 2026-08-23
 
 ### 修复

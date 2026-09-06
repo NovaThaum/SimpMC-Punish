@@ -6,7 +6,7 @@
 
     <groupId>me.simpmc</groupId>
     <artifactId>simpmc-punish</artifactId>
-    <version>3.0.1</version>
+    <version>3.1.1</version>
     <packaging>jar</packaging>
 
     <name>SimpMC-Punish</name>

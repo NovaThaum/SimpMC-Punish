@@ -1,5 +1,8 @@
 package me.simpmc.simpmcpunish.util;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.kyori.adventure.text.Component;
@@ -15,6 +18,9 @@ public final class MessageUtil {
     private static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
     private static final Pattern SECTION_PATTERN = Pattern.compile("\u00a7[0-9a-fk-orA-FK-OR]");
     private static final Pattern MINI_MESSAGE_PATTERN = Pattern.compile("<[a-zA-Z_#]+[^>]*>");
+    private static final DateTimeFormatter VANILLA_BAN_DATE = DateTimeFormatter
+            .ofPattern("yyyy-MM-dd 'at' HH:mm:ss z")
+            .withZone(ZoneId.systemDefault());
 
     private MessageUtil() {
     }
@@ -79,6 +85,27 @@ public final class MessageUtil {
             }
         }
         return Component.text(message);
+    }
+
+    public static Component toBanDisconnectComponent(String reason, Instant expiresAt, boolean ipBan) {
+        String keyPrefix = ipBan
+                ? "multiplayer.disconnect.banned_ip"
+                : "multiplayer.disconnect.banned";
+        Component result = Component.translatable(
+                keyPrefix + ".reason",
+                Component.text(reason != null ? reason : "未填写原因"));
+        if (expiresAt != null) {
+            result = result.append(Component.translatable(
+                    keyPrefix + ".expiration",
+                    Component.text(VANILLA_BAN_DATE.format(expiresAt))));
+        }
+        return result;
+    }
+
+    public static Component toKickDisconnectComponent(String reason) {
+        return Component.translatable(
+                "multiplayer.disconnect.banned.reason",
+                Component.text(reason != null ? reason : "未填写原因"));
     }
 
     private static String convertLegacyToMiniMessage(String message) {

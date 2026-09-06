@@ -2,6 +2,7 @@ prefix: "&8[&c&lSimpMC-Punish&8]&r "
 
 punishments:
   ban:
+    # behavior.vanilla-ban-components=false 时使用此模板。
     screen: |-
       &c&l你已被封禁
 

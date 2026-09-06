@@ -1,3 +1,4 @@
+# behavior.vanilla-ban-components=false 时使用此模板。
 ban-screen: |-
   <red><bold>你已被封禁</bold></red>
 

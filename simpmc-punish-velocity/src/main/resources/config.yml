@@ -30,6 +30,8 @@ behavior:
   disconnect-backend-kicks: true
   # 数据库查询失败时是否拒绝登录。建议保持 false，避免数据库故障导致全网无法进入。
   deny-login-on-database-error: false
+  # true: 使用 Minecraft 原版可翻译封禁组件；false: 使用 messages.yml 中的 ban-screen。
+  vanilla-ban-components: true
 
 logging:
   backend-kicks: true

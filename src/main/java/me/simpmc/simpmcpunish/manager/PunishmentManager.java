@@ -16,7 +16,9 @@ import me.simpmc.simpmcpunish.model.PunishmentType;
 import me.simpmc.simpmcpunish.util.MessageUtil;
 import me.simpmc.simpmcpunish.util.MessagesManager;
 import me.simpmc.simpmcpunish.util.TimeUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -185,7 +187,7 @@ public class PunishmentManager {
             punishment.setActive(false);
             this.punishmentDAO.insert(punishment);
             this.plugin.getWebhookManager().logPunishment(punishment);
-            String kickMessage = this.buildKickMessage(targetName, staffName, PunishmentType.KICK, reason, null);
+            Component kickMessage = this.buildDisconnectMessage(targetName, staffName, PunishmentType.KICK, reason, null);
             this.kickPlayer(target, kickMessage);
             return true;
         });
@@ -290,18 +292,18 @@ public class PunishmentManager {
     private void kickIfOnline(UUID targetUUID, String playerName, String staffName, PunishmentType type, String reason, Instant expiresAt) {
         Player target = Bukkit.getPlayer((UUID)targetUUID);
         if (target != null && target.isOnline()) {
-            String kickMessage = this.buildKickMessage(playerName, staffName, type, reason, expiresAt);
+            Component kickMessage = this.buildDisconnectMessage(playerName, staffName, type, reason, expiresAt);
             this.kickPlayer(target, kickMessage);
         }
     }
 
-    private void kickPlayer(Player target, String kickMessage) {
+    private void kickPlayer(Player target, Component kickMessage) {
         this.plugin.getSchedulerManager().runForEntity((Entity)target, () -> {
             if (!target.isOnline()) {
                 return;
             }
             this.suppressLeaveMessageFor.add(target.getUniqueId());
-            target.kick(MessageUtil.toComponent(kickMessage));
+            target.kick(kickMessage);
         });
     }
 
@@ -323,6 +325,30 @@ public class PunishmentManager {
                 .replace("{expires}", TimeUtil.formatRemaining(expiresAt))
                 .replace("{player}", playerName != null ? playerName : "未知玩家")
                 .replace("{staff}", staffName != null ? staffName : "控制台");
+    }
+
+    public Component buildDisconnectMessage(String playerName, String staffName, PunishmentType type, String reason, Instant expiresAt) {
+        if (this.usesVanillaBanComponents()) {
+            if (type == PunishmentType.KICK) {
+                return MessageUtil.toKickDisconnectComponent(reason);
+            }
+            if (type.preventsLogin()) {
+                return MessageUtil.toBanDisconnectComponent(reason, expiresAt, type.isIpBan());
+            }
+        }
+        return MessageUtil.toComponent(this.buildKickMessage(playerName, staffName, type, reason, expiresAt));
+    }
+
+    private boolean usesVanillaBanComponents() {
+        return usesVanillaBanComponents(this.plugin.getConfig());
+    }
+
+    static boolean usesVanillaBanComponents(Configuration config) {
+        String path = "behavior.vanilla-ban-components";
+        if (!config.contains(path, true)) {
+            return false;
+        }
+        return config.getBoolean(path);
     }
 }
 
