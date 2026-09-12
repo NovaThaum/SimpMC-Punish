@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,32 +37,68 @@ public class PunishmentDAO {
 
     public CompletableFuture<Integer> insert(Punishment punishment) {
         return CompletableFuture.supplyAsync(() -> {
-            String sql = "INSERT INTO punishments "
-                + "(target_uuid, target_name, target_ip, staff_uuid, staff_name, type, reason, created_at, expires_at, active) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-            try (Connection conn = this.databaseManager.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-                stmt.setString(1, punishment.getTargetUUID() != null ? punishment.getTargetUUID().toString() : null);
-                stmt.setString(2, punishment.getTargetName());
-                stmt.setString(3, punishment.getTargetIp());
-                stmt.setString(4, punishment.getStaffUUID() != null ? punishment.getStaffUUID().toString() : null);
-                stmt.setString(5, punishment.getStaffName());
-                stmt.setString(6, punishment.getType().name());
-                stmt.setString(7, punishment.getReason());
-                stmt.setLong(8, punishment.getCreatedAt().toEpochMilli());
-                stmt.setObject(9, punishment.getExpiresAt() != null ? Long.valueOf(punishment.getExpiresAt().toEpochMilli()) : null);
-                stmt.setInt(10, punishment.isActive() ? 1 : 0);
-                stmt.executeUpdate();
-
-                try (ResultSet rs = stmt.getGeneratedKeys()) {
-                    return rs.next() ? rs.getInt(1) : -1;
-                }
+            try (Connection conn = this.databaseManager.getConnection()) {
+                return this.insert(conn, punishment);
             } catch (SQLException e) {
                 this.plugin.getLogger().log(Level.SEVERE, "写入处罚记录失败", e);
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    public CompletableFuture<int[]> insertPair(Punishment first, Punishment second) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection conn = this.databaseManager.getConnection()) {
+                boolean autoCommit = conn.getAutoCommit();
+                conn.setAutoCommit(false);
+                try {
+                    int firstId = this.insert(conn, first);
+                    int secondId = this.insert(conn, second);
+                    conn.commit();
+                    return new int[]{firstId, secondId};
+                } catch (SQLException exception) {
+                    try {
+                        conn.rollback();
+                    } catch (SQLException rollbackException) {
+                        exception.addSuppressed(rollbackException);
+                    }
+                    throw exception;
+                } finally {
+                    conn.setAutoCommit(autoCommit);
+                }
+            } catch (SQLException e) {
+                this.plugin.getLogger().log(Level.SEVERE, "事务写入成对处罚记录失败", e);
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private int insert(Connection conn, Punishment punishment) throws SQLException {
+        String sql = "INSERT INTO punishments "
+            + "(target_uuid, target_name, target_ip, staff_uuid, staff_name, type, reason, created_at, expires_at, active) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, punishment.getTargetUUID() != null ? punishment.getTargetUUID().toString() : null);
+            stmt.setString(2, punishment.getTargetName());
+            stmt.setString(3, punishment.getTargetIp());
+            stmt.setString(4, punishment.getStaffUUID() != null ? punishment.getStaffUUID().toString() : null);
+            stmt.setString(5, punishment.getStaffName());
+            stmt.setString(6, punishment.getType().name());
+            stmt.setString(7, punishment.getReason());
+            stmt.setLong(8, punishment.getCreatedAt().toEpochMilli());
+            if (punishment.getExpiresAt() == null) {
+                stmt.setNull(9, Types.BIGINT);
+            } else {
+                stmt.setLong(9, punishment.getExpiresAt().toEpochMilli());
+            }
+            stmt.setInt(10, punishment.isActive() ? 1 : 0);
+            stmt.executeUpdate();
+
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                return rs.next() ? rs.getInt(1) : -1;
+            }
+        }
     }
 
     public CompletableFuture<Optional<Punishment>> getActiveBan(UUID targetUUID) {
@@ -151,6 +188,34 @@ public class PunishmentDAO {
         });
     }
 
+    public CompletableFuture<List<Punishment>> getActiveWarnings(UUID targetUUID) {
+        return CompletableFuture.supplyAsync(() -> {
+            String sql = "SELECT * FROM punishments WHERE target_uuid = ? AND active = 1 "
+                + "AND (expires_at IS NULL OR expires_at > ?) AND type IN (?, ?) "
+                + "ORDER BY created_at DESC, id DESC";
+            ArrayList<Punishment> punishments = new ArrayList<>();
+
+            try (Connection conn = this.databaseManager.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, targetUUID.toString());
+                stmt.setLong(2, Instant.now().toEpochMilli());
+                stmt.setString(3, PunishmentType.WARN.name());
+                stmt.setString(4, PunishmentType.TEMPWARN.name());
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        punishments.add(this.mapResultSet(rs));
+                    }
+                }
+            } catch (SQLException e) {
+                this.plugin.getLogger().log(Level.SEVERE, "读取生效中的警告失败", e);
+                throw new RuntimeException(e);
+            }
+
+            return punishments;
+        });
+    }
+
     public CompletableFuture<List<Punishment>> getRecentPunishments(int limit) {
         return CompletableFuture.supplyAsync(() -> {
             String sql = "SELECT * FROM punishments ORDER BY created_at DESC LIMIT ?";
@@ -171,6 +236,23 @@ public class PunishmentDAO {
             }
 
             return punishments;
+        });
+    }
+
+    public CompletableFuture<Optional<Punishment>> getById(int id) {
+        return CompletableFuture.supplyAsync(() -> {
+            String sql = "SELECT * FROM punishments WHERE id = ?";
+
+            try (Connection conn = this.databaseManager.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, id);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    return rs.next() ? Optional.of(this.mapResultSet(rs)) : Optional.empty();
+                }
+            } catch (SQLException e) {
+                this.plugin.getLogger().log(Level.SEVERE, "读取处罚编号失败", e);
+                throw new RuntimeException(e);
+            }
         });
     }
 

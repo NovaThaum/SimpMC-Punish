@@ -40,6 +40,26 @@ commands:
     description: 临时禁言玩家
     usage: /tempmute <玩家> <时长> [原因]
     permission: simpmc-punish.tempmute
+  warn:
+    description: 警告玩家
+    usage: /warn <玩家> [原因]
+    permission: simpmc-punish.warn
+  tempwarn:
+    description: 临时警告玩家
+    usage: /tempwarn <玩家> <时长> [原因]
+    permission: simpmc-punish.tempwarn
+  warnings:
+    description: 查看玩家当前生效的警告
+    usage: /warnings <玩家>
+    permission: simpmc-punish.warnings
+  clearwarnings:
+    description: 清除玩家当前生效的警告
+    usage: /clearwarnings <玩家>
+    permission: simpmc-punish.clearwarnings
+  punishinfo:
+    description: 查看处罚记录详情
+    usage: /punishinfo <编号>
+    permission: simpmc-punish.punishinfo
   unmute:
     description: 解除玩家禁言
     usage: /unmute <玩家>
@@ -102,6 +122,21 @@ permissions:
   simpmc-punish.tempmute:
     description: 允许临时禁言玩家
     default: op
+  simpmc-punish.warn:
+    description: 允许警告玩家
+    default: op
+  simpmc-punish.tempwarn:
+    description: 允许临时警告玩家
+    default: op
+  simpmc-punish.warnings:
+    description: 允许查看玩家当前生效的警告
+    default: op
+  simpmc-punish.clearwarnings:
+    description: 允许清除玩家当前生效的警告
+    default: op
+  simpmc-punish.punishinfo:
+    description: 允许查看处罚记录详情
+    default: op
   simpmc-punish.unmute:
     description: 允许解除玩家禁言
     default: op
@@ -147,6 +182,11 @@ permissions:
       simpmc-punish.unbanip: true
       simpmc-punish.mute: true
       simpmc-punish.tempmute: true
+      simpmc-punish.warn: true
+      simpmc-punish.tempwarn: true
+      simpmc-punish.warnings: true
+      simpmc-punish.clearwarnings: true
+      simpmc-punish.punishinfo: true
       simpmc-punish.unmute: true
       simpmc-punish.muteip: true
       simpmc-punish.tempmuteip: true

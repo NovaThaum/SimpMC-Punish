@@ -31,10 +31,9 @@ punishments:
 
   mute:
     blocked: |
-      &c&l你已被禁言
-      &7执行者: &f{staff}
+      &c你的发言已被禁止！
       &7原因: &f{reason}
-      &7到期: &f{expires}
+      &7剩余时间: &f{expires}
     applied: "&c你已被 {staff} 禁言！原因: &f{reason} &7到期: &f{expires}"
     broadcast:
       enabled: true
@@ -46,6 +45,18 @@ punishments:
       enabled: true
       message: "&e{staff} &7临时禁言了 &e{player} &7原因: &f{reason} &7({duration})"
     success: "&a已临时禁言 {player}，时长 {duration}"
+
+  warn:
+    broadcast:
+      enabled: true
+      message: "&e{staff} &7警告了 &e{player} &7原因: &f{reason}"
+    success: "&a已警告 {player}"
+
+  tempwarn:
+    broadcast:
+      enabled: true
+      message: "&e{staff} &7临时警告了 &e{player} &7原因: &f{reason} &7({duration})"
+    success: "&a已临时警告 {player}，时长 {duration}"
 
   unmute:
     broadcast:
@@ -121,6 +132,15 @@ errors:
   not-muted: "&c{player} 当前没有被禁言。"
   invalid-duration: "&c时长格式无效！示例: 1h, 30m, 7d。"
   no-permission: "&c你没有权限执行该操作。"
+
+warnings:
+  header: "&8&m---------------- &e&l{player} 的当前警告 &8&m---------------- &7共 {total} 条"
+  entry:
+    - "&8#{id} &e{type} &8| &7执行者: &f{staff}"
+    - "&7  原因: &f{reason} &8| &7到期: &f{expires}"
+  empty: "&7该玩家当前没有生效中的警告。"
+  error: "&c读取警告列表失败，请查看控制台日志。"
+  cleared: "&e{staff} &7清除了 &e{player} &7的 &f{count} &7条生效警告"
 
 gui:
   punish:

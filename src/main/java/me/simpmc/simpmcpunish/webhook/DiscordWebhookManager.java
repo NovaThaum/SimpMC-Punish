@@ -130,6 +130,8 @@ public class DiscordWebhookManager {
             case PunishmentType.TEMPMUTE -> "\u23f1\ufe0f";
             case PunishmentType.MUTEIP -> "\ud83d\udcf5";
             case PunishmentType.TEMPMUTEIP -> "\ud83d\udcf4";
+            case PunishmentType.WARN -> "\u26a0\ufe0f";
+            case PunishmentType.TEMPWARN -> "\u23f3";
             case PunishmentType.KICK -> "\ud83d\udc62";
         };
     }
@@ -143,6 +145,7 @@ public class DiscordWebhookManager {
             case PunishmentType.MUTE -> 0xFFFF00;
             case PunishmentType.TEMPMUTE -> 65280;
             case PunishmentType.MUTEIP, PunishmentType.TEMPMUTEIP -> 0xCCCC00;
+            case PunishmentType.WARN, PunishmentType.TEMPWARN -> 0xFFCC00;
             case PunishmentType.KICK -> 39423;
         };
     }

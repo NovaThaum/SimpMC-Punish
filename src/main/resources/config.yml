@@ -38,6 +38,10 @@ database:
 # 缓存配置
 cache:
   expiry-minutes: 10
+  # 跨服解除禁言的最长同步延迟；禁言缓存会按此周期重新读取数据库。
+  mute-expiry-seconds: 5
+  # 聊天时缓存未命中后查询共享数据库的最长等待时间。
+  mute-check-timeout-ms: 1000
   max-size: 1000
   expiry-check-interval: 60
 

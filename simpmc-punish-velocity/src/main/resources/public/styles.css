@@ -194,6 +194,12 @@ td small {
   background: #fff5db;
 }
 
+.type.WARN,
+.type.TEMPWARN {
+  color: #a66a00;
+  background: #fff5db;
+}
+
 .type.KICK {
   color: #1769aa;
   background: #e8f2fb;

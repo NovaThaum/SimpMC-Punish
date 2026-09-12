@@ -4,6 +4,9 @@ import io.papermc.paper.event.player.AsyncChatEvent;
 import java.net.InetSocketAddress;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import me.simpmc.simpmcpunish.SimpMCPunish;
 import me.simpmc.simpmcpunish.model.Punishment;
 import me.simpmc.simpmcpunish.util.MessageUtil;
@@ -32,6 +35,9 @@ implements Listener {
         }
         String ipAddress = this.getPlayerIp(player);
         Optional<Punishment> activeMute = this.plugin.getCacheManager().getActiveMute(uuid);
+        if (activeMute == null) {
+            activeMute = this.loadActiveMute(uuid);
+        }
         if (activeMute != null && activeMute.isPresent()) {
             Punishment punishment = activeMute.get();
             if (!punishment.isExpired()) {
@@ -40,7 +46,15 @@ implements Listener {
             }
             this.plugin.getCacheManager().invalidateMute(uuid);
         }
-        if (ipAddress != null && (activeIpMute = this.plugin.getCacheManager().getActiveIpMute(ipAddress)) != null && activeIpMute.isPresent()) {
+        if (ipAddress != null) {
+            activeIpMute = this.plugin.getCacheManager().getActiveIpMute(ipAddress);
+            if (activeIpMute == null) {
+                activeIpMute = this.loadActiveIpMute(ipAddress);
+            }
+        } else {
+            activeIpMute = null;
+        }
+        if (activeIpMute != null && activeIpMute.isPresent()) {
             Punishment punishment = activeIpMute.get();
             if (!punishment.isExpired()) {
                 this.handleMute(event, player, punishment);
@@ -48,6 +62,36 @@ implements Listener {
             }
             this.plugin.getCacheManager().invalidateIpMute(ipAddress);
         }
+    }
+
+    private Optional<Punishment> loadActiveMute(UUID uuid) {
+        try {
+            return this.plugin.getPunishmentManager().getActiveMute(uuid)
+                    .get(this.getMuteCheckTimeoutMillis(), TimeUnit.MILLISECONDS);
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            return Optional.empty();
+        } catch (ExecutionException | TimeoutException exception) {
+            this.plugin.getLogger().warning("读取玩家禁言状态失败，已允许本次发言: " + exception.getMessage());
+            return Optional.empty();
+        }
+    }
+
+    private Optional<Punishment> loadActiveIpMute(String ipAddress) {
+        try {
+            return this.plugin.getPunishmentManager().getActiveIpMute(ipAddress)
+                    .get(this.getMuteCheckTimeoutMillis(), TimeUnit.MILLISECONDS);
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            return Optional.empty();
+        } catch (ExecutionException | TimeoutException exception) {
+            this.plugin.getLogger().warning("读取 IP 禁言状态失败，已允许本次发言: " + exception.getMessage());
+            return Optional.empty();
+        }
+    }
+
+    private long getMuteCheckTimeoutMillis() {
+        return Math.max(100L, this.plugin.getConfig().getLong("cache.mute-check-timeout-ms", 1000L));
     }
 
     private void handleMute(AsyncChatEvent event, Player player, Punishment punishment) {

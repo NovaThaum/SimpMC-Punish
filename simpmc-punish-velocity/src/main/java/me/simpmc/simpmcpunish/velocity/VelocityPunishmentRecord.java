@@ -59,6 +59,8 @@ public record VelocityPunishmentRecord(
             case "TEMPMUTE" -> "临时禁言";
             case "MUTEIP" -> "IP 禁言";
             case "TEMPMUTEIP" -> "临时 IP 禁言";
+            case "WARN" -> "警告";
+            case "TEMPWARN" -> "临时警告";
             case "KICK" -> "踢出";
             default -> type == null ? "未知" : type;
         };

@@ -107,6 +107,8 @@ implements Listener {
             case TEMPBAN -> this.plugin.getPunishmentManager().tempban(this.target.getUniqueId(), this.target.getName(), staffUUID, staffName, this.durationMs, reason);
             case MUTE -> this.plugin.getPunishmentManager().mute(this.target.getUniqueId(), this.target.getName(), staffUUID, staffName, reason);
             case TEMPMUTE -> this.plugin.getPunishmentManager().tempmute(this.target.getUniqueId(), this.target.getName(), staffUUID, staffName, this.durationMs, reason);
+            case WARN -> this.plugin.getPunishmentManager().warn(this.target.getUniqueId(), this.target.getName(), staffUUID, staffName, reason);
+            case TEMPWARN -> this.plugin.getPunishmentManager().tempwarn(this.target.getUniqueId(), this.target.getName(), staffUUID, staffName, this.durationMs, reason);
             case KICK -> this.plugin.getPunishmentManager().kick(this.target.getUniqueId(), this.target.getName(), staffUUID, staffName, reason);
             case BANIP, TEMPBANIP, MUTEIP, TEMPMUTEIP -> throw new UnsupportedOperationException("IP 类处罚必须通过命令执行，不能通过菜单界面执行");
         };
@@ -117,15 +119,20 @@ implements Listener {
                 case TEMPBAN -> "punishments.tempban";
                 case MUTE -> "punishments.mute";
                 case TEMPMUTE -> "punishments.tempmute";
+                case WARN -> "punishments.warn";
+                case TEMPWARN -> "punishments.tempwarn";
                 case KICK -> "punishments.kick";
                 default -> null;
             };
             this.plugin.getSchedulerManager().runSync(() -> {
-                this.staff.sendMessage(MessageUtil.toComponent(this.msg().getMessage(configPath + ".success", "{player}", this.target.getName(), "{duration}", durationStr)));
+                boolean senderNotified = false;
                 if (configPath != null && this.msg().getConfig().getBoolean(configPath + ".broadcast.enabled", true)) {
                     String broadcastMsg = this.msg().getMessage(configPath + ".broadcast.message", "{staff}", staffName, "{player}", this.target.getName(), "{reason}", reason, "{duration}", durationStr);
                     String prefix = this.msg().getPrefix();
-                    this.broadcastToStaff(prefix + broadcastMsg);
+                    senderNotified = this.broadcastToAll(prefix + broadcastMsg);
+                }
+                if (!senderNotified) {
+                    this.staff.sendMessage(MessageUtil.toComponent(this.msg().getMessage(configPath + ".success", "{player}", this.target.getName(), "{duration}", durationStr)));
                 }
             });
         }).exceptionally(e -> {
@@ -135,13 +142,17 @@ implements Listener {
         });
     }
 
-    private void broadcastToStaff(String message) {
+    private boolean broadcastToAll(String message) {
         Collection<? extends Player> players = this.plugin.getServer().getOnlinePlayers();
+        boolean senderNotified = false;
         for (Player p : players) {
-            if (!p.hasPermission("simpmc-punish.staff")) continue;
             p.sendMessage(MessageUtil.toComponent(message));
+            if (p.equals(this.staff)) {
+                senderNotified = true;
+            }
         }
         this.plugin.getServer().getConsoleSender().sendMessage(MessageUtil.toComponent(message));
+        return senderNotified;
     }
 
     private void cleanup() {

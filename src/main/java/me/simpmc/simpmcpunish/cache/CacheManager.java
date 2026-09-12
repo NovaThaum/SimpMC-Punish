@@ -16,12 +16,13 @@ public class CacheManager {
 
     public CacheManager(SimpMCPunish plugin) {
         int cacheExpiry = plugin.getConfig().getInt("cache.expiry-minutes", 10);
+        int muteCacheExpiry = Math.max(1, plugin.getConfig().getInt("cache.mute-expiry-seconds", 5));
         int maxSize = plugin.getConfig().getInt("cache.max-size", 1000);
         this.banCache = Caffeine.newBuilder().maximumSize(maxSize).expireAfterWrite(cacheExpiry, TimeUnit.MINUTES).recordStats().build();
-        this.muteCache = Caffeine.newBuilder().maximumSize(maxSize).expireAfterWrite(cacheExpiry, TimeUnit.MINUTES).recordStats().build();
+        this.muteCache = Caffeine.newBuilder().maximumSize(maxSize).expireAfterWrite(muteCacheExpiry, TimeUnit.SECONDS).recordStats().build();
         this.ipBanCache = Caffeine.newBuilder().maximumSize(maxSize).expireAfterWrite(cacheExpiry, TimeUnit.MINUTES).recordStats().build();
-        this.ipMuteCache = Caffeine.newBuilder().maximumSize(maxSize).expireAfterWrite(cacheExpiry, TimeUnit.MINUTES).recordStats().build();
-        plugin.getLogger().info("缓存管理器已初始化（最大数量: " + maxSize + "，过期时间: " + cacheExpiry + " 分钟）");
+        this.ipMuteCache = Caffeine.newBuilder().maximumSize(maxSize).expireAfterWrite(muteCacheExpiry, TimeUnit.SECONDS).recordStats().build();
+        plugin.getLogger().info("缓存管理器已初始化（最大数量: " + maxSize + "，处罚缓存过期时间: " + cacheExpiry + " 分钟，禁言缓存同步周期: " + muteCacheExpiry + " 秒）");
     }
 
     public Optional<Punishment> getActiveBan(UUID uuid) {

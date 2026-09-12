@@ -15,7 +15,8 @@ const els = {
   total: document.querySelector('#stat-total'),
   active: document.querySelector('#stat-active'),
   bans: document.querySelector('#stat-bans'),
-  mutes: document.querySelector('#stat-mutes')
+  mutes: document.querySelector('#stat-mutes'),
+  warnings: document.querySelector('#stat-warnings')
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -47,6 +48,7 @@ async function loadStats() {
   els.active.textContent = number(stats.active);
   els.bans.textContent = number(stats.bans);
   els.mutes.textContent = number(stats.mutes);
+  els.warnings.textContent = number(stats.warnings);
 }
 
 async function loadRecent() {

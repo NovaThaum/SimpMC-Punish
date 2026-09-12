@@ -9,6 +9,8 @@ public enum PunishmentType {
     TEMPMUTE("临时禁言", "\u00a7a", false),
     MUTEIP("IP 禁言", "\u00a76", false),
     TEMPMUTEIP("临时 IP 禁言", "\u00a7e", false),
+    WARN("警告", "\u00a7e", false),
+    TEMPWARN("临时警告", "\u00a76", false),
     KICK("踢出", "\u00a79", false);
 
     private final String displayName;
@@ -34,7 +36,8 @@ public enum PunishmentType {
     }
 
     public boolean isTemporary() {
-        return this == TEMPBAN || this == TEMPMUTE || this == TEMPBANIP || this == TEMPMUTEIP;
+        return this == TEMPBAN || this == TEMPMUTE || this == TEMPBANIP || this == TEMPMUTEIP
+                || this == TEMPWARN;
     }
 
     public boolean isBan() {
@@ -57,18 +60,23 @@ public enum PunishmentType {
         return this.isIpBan() || this.isIpMute();
     }
 
+    public boolean isWarning() {
+        return this == WARN || this == TEMPWARN;
+    }
+
     public String getPermission() {
-        return switch (this.ordinal()) {
-            default -> throw new MatchException(null, null);
-            case 0 -> "simpmc-punish.ban";
-            case 1 -> "simpmc-punish.tempban";
-            case 2 -> "simpmc-punish.banip";
-            case 3 -> "simpmc-punish.tempbanip";
-            case 4 -> "simpmc-punish.mute";
-            case 5 -> "simpmc-punish.tempmute";
-            case 6 -> "simpmc-punish.muteip";
-            case 7 -> "simpmc-punish.tempmuteip";
-            case 8 -> "simpmc-punish.kick";
+        return switch (this) {
+            case BAN -> "simpmc-punish.ban";
+            case TEMPBAN -> "simpmc-punish.tempban";
+            case BANIP -> "simpmc-punish.banip";
+            case TEMPBANIP -> "simpmc-punish.tempbanip";
+            case MUTE -> "simpmc-punish.mute";
+            case TEMPMUTE -> "simpmc-punish.tempmute";
+            case MUTEIP -> "simpmc-punish.muteip";
+            case TEMPMUTEIP -> "simpmc-punish.tempmuteip";
+            case WARN -> "simpmc-punish.warn";
+            case TEMPWARN -> "simpmc-punish.tempwarn";
+            case KICK -> "simpmc-punish.kick";
         };
     }
 }

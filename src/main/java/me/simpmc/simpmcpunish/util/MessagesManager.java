@@ -15,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class MessagesManager {
     private static final String V2_BAN_SCREEN = "&c你已被封禁: &f{reason} &8| &7到期: &f{expires}";
     private static final String V2_KICK_SCREEN = "&6你已被踢出服务器: &f{reason}";
+    private static final String V2_MUTE_BLOCKED = "&c&l你已被禁言\n&7执行者: &f{staff}\n&7原因: &f{reason}\n&7到期: &f{expires}";
     private final JavaPlugin plugin;
     private FileConfiguration messagesConfig;
     private File messagesFile;
@@ -107,6 +108,10 @@ public final class MessagesManager {
         }
         if (defaults != null && V2_KICK_SCREEN.equals(this.messagesConfig.getString("punishments.kick.screen"))) {
             this.messagesConfig.set("punishments.kick.screen", defaults.getString("punishments.kick.screen"));
+            changed = true;
+        }
+        if (defaults != null && V2_MUTE_BLOCKED.equals(this.messagesConfig.getString("punishments.mute.blocked", "").trim())) {
+            this.messagesConfig.set("punishments.mute.blocked", defaults.getString("punishments.mute.blocked"));
             changed = true;
         }
         if (!changed) {

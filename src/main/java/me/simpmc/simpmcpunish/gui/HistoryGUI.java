@@ -134,6 +134,8 @@ extends FastInv {
             case PunishmentType.TEMPMUTE -> Material.LIME_WOOL;
             case PunishmentType.MUTEIP -> Material.YELLOW_CONCRETE;
             case PunishmentType.TEMPMUTEIP -> Material.LIME_CONCRETE;
+            case PunishmentType.WARN -> Material.YELLOW_WOOL;
+            case PunishmentType.TEMPWARN -> Material.ORANGE_WOOL;
             case PunishmentType.KICK -> Material.LIGHT_BLUE_WOOL;
         };
     }

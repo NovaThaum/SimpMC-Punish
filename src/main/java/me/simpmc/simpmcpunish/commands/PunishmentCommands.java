@@ -73,10 +73,6 @@ extends BaseCommand {
     public void onUnban(CommandSender sender, String targetName) {
         UUID uUID;
         OfflinePlayer target = Bukkit.getOfflinePlayer((String)targetName);
-        if (!target.hasPlayedBefore() && !target.isOnline()) {
-            sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("errors.player-not-found")));
-            return;
-        }
         if (sender instanceof Player) {
             Player p = (Player)sender;
             uUID = p.getUniqueId();
@@ -124,6 +120,29 @@ extends BaseCommand {
             return;
         }
         this.executePunishment(sender, targetName, PunishmentType.TEMPMUTE, durationMs, reason);
+    }
+
+    @CommandAlias(value="warn")
+    @CommandPermission(value="simpmc-punish.warn")
+    @CommandCompletion(value="@players")
+    @Description(value="警告玩家")
+    @Syntax(value="<玩家> [原因]")
+    public void onWarn(CommandSender sender, String targetName, @Optional String reason) {
+        this.executePunishment(sender, targetName, PunishmentType.WARN, -1L, reason);
+    }
+
+    @CommandAlias(value="tempwarn")
+    @CommandPermission(value="simpmc-punish.tempwarn")
+    @CommandCompletion(value="@players")
+    @Description(value="临时警告玩家")
+    @Syntax(value="<玩家> <时长> [原因]")
+    public void onTempWarn(CommandSender sender, String targetName, String duration, @Optional String reason) {
+        long durationMs = TimeUtil.parseDuration(duration);
+        if (durationMs <= 0L) {
+            sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("errors.invalid-duration")));
+            return;
+        }
+        this.executePunishment(sender, targetName, PunishmentType.TEMPWARN, durationMs, reason);
     }
 
     @CommandAlias(value="unmute")
@@ -200,10 +219,6 @@ extends BaseCommand {
     public void onUnbanIp(CommandSender sender, String targetName) {
         UUID uUID;
         OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer((String)targetName);
-        if (!offlineTarget.hasPlayedBefore() && !offlineTarget.isOnline()) {
-            sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("errors.player-not-found")));
-            return;
-        }
         UUID targetUUID = offlineTarget.getUniqueId();
         if (sender instanceof Player) {
             Player p = (Player)sender;
@@ -397,6 +412,113 @@ extends BaseCommand {
         HistoryGUI.openAsync(this.plugin, sender, target);
     }
 
+    @CommandAlias(value="warnings")
+    @CommandPermission(value="simpmc-punish.warnings")
+    @CommandCompletion(value="@players")
+    @Description(value="查看玩家当前生效的警告")
+    @Syntax(value="<玩家>")
+    public void onWarnings(CommandSender sender, String targetName) {
+        OfflinePlayer target = Bukkit.getOfflinePlayer((String)targetName);
+        this.plugin.getPunishmentManager().getActiveWarnings(target.getUniqueId()).whenComplete((warnings, error) ->
+            this.runForSender(sender, () -> {
+                if (error != null) {
+                    sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("warnings.error")));
+                    this.plugin.getLogger().severe("读取警告列表失败: " + error.getMessage());
+                    return;
+                }
+                sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("warnings.header",
+                    "{player}", targetName,
+                    "{total}", String.valueOf(warnings.size()))));
+                if (warnings.isEmpty()) {
+                    sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("warnings.empty")));
+                    return;
+                }
+                for (Punishment warning : warnings) {
+                    for (String line : this.msg().getMessageList("warnings.entry",
+                            "{id}", String.valueOf(warning.getId()),
+                            "{type}", warning.getType().getDisplayName(),
+                            "{staff}", warning.getStaffName() != null ? warning.getStaffName() : "控制台",
+                            "{reason}", warning.getReason() != null ? warning.getReason() : "未填写原因",
+                            "{expires}", TimeUtil.formatRemaining(warning.getExpiresAt()))) {
+                        sender.sendMessage(MessageUtil.toComponent(line));
+                    }
+                }
+            }));
+    }
+
+    @CommandAlias(value="clearwarnings")
+    @CommandPermission(value="simpmc-punish.clearwarnings")
+    @CommandCompletion(value="@players")
+    @Description(value="清除玩家当前生效的警告")
+    @Syntax(value="<玩家>")
+    public void onClearWarnings(CommandSender sender, String targetName) {
+        OfflinePlayer target = Bukkit.getOfflinePlayer((String)targetName);
+        UUID staffUUID = sender instanceof Player player ? player.getUniqueId() : null;
+        this.plugin.getPunishmentManager().clearWarnings(target.getUniqueId(), staffUUID, sender.getName(), "管理员清除警告")
+            .whenComplete((count, error) -> this.runForSender(sender, () -> {
+                if (error != null) {
+                    sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("warnings.error")));
+                    this.plugin.getLogger().severe("清除警告失败: " + error.getMessage());
+                    return;
+                }
+                if (count > 0) {
+                    String message = this.msg().getMessage("warnings.cleared",
+                        "{staff}", sender.getName(),
+                        "{player}", targetName,
+                        "{count}", String.valueOf(count));
+                    this.broadcastStaff(message, sender);
+                } else {
+                    sender.sendMessage(MessageUtil.toComponent(this.msg().getMessage("warnings.empty")));
+                }
+            }));
+    }
+
+    @CommandAlias(value="punishinfo")
+    @CommandPermission(value="simpmc-punish.punishinfo")
+    @Description(value="查看处罚记录详情")
+    @Syntax(value="<编号>")
+    public void onPunishmentInfo(CommandSender sender, String idInput) {
+        int id;
+        try {
+            id = Integer.parseInt(idInput);
+        } catch (NumberFormatException exception) {
+            sender.sendMessage(MessageUtil.toComponent("&c处罚编号必须是正整数。"));
+            return;
+        }
+        if (id <= 0) {
+            sender.sendMessage(MessageUtil.toComponent("&c处罚编号必须是正整数。"));
+            return;
+        }
+        this.plugin.getPunishmentManager().getPunishmentById(id).whenComplete((optional, error) ->
+            this.runForSender(sender, () -> {
+                if (error != null) {
+                    sender.sendMessage(MessageUtil.toComponent("&c读取处罚记录失败，请查看控制台日志。"));
+                    this.plugin.getLogger().severe("读取处罚编号 " + id + " 失败: " + error.getMessage());
+                    return;
+                }
+                if (optional.isEmpty()) {
+                    sender.sendMessage(MessageUtil.toComponent("&c找不到处罚编号 #" + id + "。"));
+                    return;
+                }
+                Punishment punishment = optional.get();
+                String target = punishment.getTargetName() != null ? punishment.getTargetName() : "未知玩家";
+                sender.sendMessage(MessageUtil.toComponent("&8&m---------------- &c&l处罚详情 &8&m----------------"));
+                sender.sendMessage(MessageUtil.toComponent("&7编号: &f#" + punishment.getId()));
+                sender.sendMessage(MessageUtil.toComponent("&7玩家: &f" + target));
+                sender.sendMessage(MessageUtil.toComponent("&7类型: " + punishment.getType().getColor() + punishment.getType().getDisplayName()));
+                sender.sendMessage(MessageUtil.toComponent("&7原因: &f" + (punishment.getReason() != null ? punishment.getReason() : "未填写原因")));
+                sender.sendMessage(MessageUtil.toComponent("&7执行者: &f" + (punishment.getStaffName() != null ? punishment.getStaffName() : "控制台")));
+                sender.sendMessage(MessageUtil.toComponent("&7创建时间: &f" + TimeUtil.formatDate(punishment.getCreatedAt())));
+                sender.sendMessage(MessageUtil.toComponent("&7到期时间: &f" + TimeUtil.formatRemaining(punishment.getExpiresAt())));
+                sender.sendMessage(MessageUtil.toComponent("&7状态: " + (punishment.isActive() ? "&a生效中" : "&c已移除")));
+                if (!punishment.isActive()) {
+                    sender.sendMessage(MessageUtil.toComponent("&7移除者: &f" + (punishment.getRemovedByName() != null ? punishment.getRemovedByName() : "系统")));
+                    sender.sendMessage(MessageUtil.toComponent("&7移除原因: &f" + (punishment.getRemoveReason() != null ? punishment.getRemoveReason() : "未填写")));
+                }
+                sender.sendMessage(MessageUtil.toComponent("&8&m--------------------------------------------------"));
+            }));
+    }
+
     @CommandAlias(value="banlist")
     @CommandPermission(value="simpmc-punish.banlist")
     @Description(value="查看当前生效中的封禁列表")
@@ -455,6 +577,11 @@ extends BaseCommand {
             "&e/mute &7<玩家> [原因] &8- &f永久禁言玩家",
             "&e/tempmute &7<玩家> <时长> [原因] &8- &f临时禁言玩家",
             "&e/unmute &7<玩家> &8- &f解除玩家禁言",
+            "&e/warn &7<玩家> [原因] &8- &f警告玩家",
+            "&e/tempwarn &7<玩家> <时长> [原因] &8- &f临时警告玩家",
+            "&e/warnings &7<玩家> &8- &f查看当前警告",
+            "&e/clearwarnings &7<玩家> &8- &f清除当前警告",
+            "&c/punishinfo &7<编号> &8- &f查看处罚详情",
             "",
             "&d/banip &7<玩家> [原因] &8- &f封禁玩家 IP",
             "&d/tempbanip &7<玩家> <时长> [原因] &8- &f临时封禁玩家 IP",
@@ -557,6 +684,8 @@ extends BaseCommand {
             case TEMPBAN -> this.plugin.getPunishmentManager().tempban(target.getUniqueId(), target.getName(), staffUUID, staffName, durationMs, finalReason);
             case MUTE -> this.plugin.getPunishmentManager().mute(target.getUniqueId(), target.getName(), staffUUID, staffName, finalReason);
             case TEMPMUTE -> this.plugin.getPunishmentManager().tempmute(target.getUniqueId(), target.getName(), staffUUID, staffName, durationMs, finalReason);
+            case WARN -> this.plugin.getPunishmentManager().warn(target.getUniqueId(), target.getName(), staffUUID, staffName, finalReason);
+            case TEMPWARN -> this.plugin.getPunishmentManager().tempwarn(target.getUniqueId(), target.getName(), staffUUID, staffName, durationMs, finalReason);
             default -> null;
         };
         if (future == null) {
@@ -569,6 +698,8 @@ extends BaseCommand {
                 case TEMPBAN -> "punishments.tempban";
                 case MUTE -> "punishments.mute";
                 case TEMPMUTE -> "punishments.tempmute";
+                case WARN -> "punishments.warn";
+                case TEMPWARN -> "punishments.tempwarn";
                 default -> null;
             };
             boolean senderNotified = false;
@@ -592,7 +723,6 @@ extends BaseCommand {
         boolean senderNotified = false;
         Collection<? extends Player> players = Bukkit.getOnlinePlayers();
         for (Player player : players) {
-            if (!player.hasPermission("simpmc-punish.staff")) continue;
             player.sendMessage(MessageUtil.toComponent(formattedMessage));
             if (player.equals(sender)) {
                 senderNotified = true;

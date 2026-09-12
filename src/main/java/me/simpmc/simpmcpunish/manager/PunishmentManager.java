@@ -100,12 +100,10 @@ public class PunishmentManager {
         String normalizedIp = this.normalizeIp(ipAddress);
         Punishment uuidPunishment = new Punishment(targetUUID, targetName, staffUUID, staffName, uuidType, reason, Instant.now(), expiresAt);
         Punishment ipPunishment = new Punishment(targetUUID, targetName, normalizedIp, staffUUID, staffName, ipType, reason, Instant.now(), expiresAt);
-        return ((CompletableFuture)this.punishmentDAO.insert(uuidPunishment).thenCompose(uuidId -> {
-            uuidPunishment.setId((int)uuidId);
+        return this.punishmentDAO.insertPair(uuidPunishment, ipPunishment).thenApply(ids -> {
+            uuidPunishment.setId(ids[0]);
+            ipPunishment.setId(ids[1]);
             this.cacheManager.cacheBan(targetUUID, Optional.of(uuidPunishment));
-            return this.punishmentDAO.insert(ipPunishment);
-        })).thenApply(ipId -> {
-            ipPunishment.setId((int)ipId);
             this.cacheManager.cacheIpBan(normalizedIp, Optional.of(ipPunishment));
             this.kickIfOnline(targetUUID, targetName, staffName, ipType, reason, expiresAt);
             this.plugin.getWebhookManager().logPunishment(ipPunishment);
@@ -127,12 +125,10 @@ public class PunishmentManager {
         String normalizedIp = this.normalizeIp(ipAddress);
         Punishment uuidPunishment = new Punishment(targetUUID, targetName, staffUUID, staffName, uuidType, reason, Instant.now(), expiresAt);
         Punishment ipPunishment = new Punishment(targetUUID, targetName, normalizedIp, staffUUID, staffName, ipType, reason, Instant.now(), expiresAt);
-        return ((CompletableFuture)this.punishmentDAO.insert(uuidPunishment).thenCompose(uuidId -> {
-            uuidPunishment.setId((int)uuidId);
+        return this.punishmentDAO.insertPair(uuidPunishment, ipPunishment).thenApply(ids -> {
+            uuidPunishment.setId(ids[0]);
+            ipPunishment.setId(ids[1]);
             this.cacheManager.cacheMute(targetUUID, Optional.of(uuidPunishment));
-            return this.punishmentDAO.insert(ipPunishment);
-        })).thenApply(ipId -> {
-            ipPunishment.setId((int)ipId);
             this.cacheManager.cacheIpMute(normalizedIp, Optional.of(ipPunishment));
             this.notifyMute(targetUUID, targetName, staffName, reason, expiresAt);
             this.plugin.getWebhookManager().logPunishment(ipPunishment);
@@ -163,6 +159,15 @@ public class PunishmentManager {
     public CompletableFuture<Punishment> tempmute(UUID targetUUID, String targetName, UUID staffUUID, String staffName, long durationMillis, String reason) {
         Instant expiresAt = TimeUtil.getExpiryInstant(durationMillis);
         return this.createPunishment(targetUUID, targetName, staffUUID, staffName, PunishmentType.TEMPMUTE, reason, expiresAt);
+    }
+
+    public CompletableFuture<Punishment> warn(UUID targetUUID, String targetName, UUID staffUUID, String staffName, String reason) {
+        return this.createPunishment(targetUUID, targetName, staffUUID, staffName, PunishmentType.WARN, reason, null);
+    }
+
+    public CompletableFuture<Punishment> tempwarn(UUID targetUUID, String targetName, UUID staffUUID, String staffName, long durationMillis, String reason) {
+        Instant expiresAt = TimeUtil.getExpiryInstant(durationMillis);
+        return this.createPunishment(targetUUID, targetName, staffUUID, staffName, PunishmentType.TEMPWARN, reason, expiresAt);
     }
 
     public CompletableFuture<Boolean> unmute(UUID targetUUID, UUID staffUUID, String staffName, String reason) {
@@ -219,6 +224,19 @@ public class PunishmentManager {
         return this.punishmentDAO.getHistory(targetUUID);
     }
 
+    public CompletableFuture<Optional<Punishment>> getPunishmentById(int id) {
+        return this.punishmentDAO.getById(id);
+    }
+
+    public CompletableFuture<List<Punishment>> getActiveWarnings(UUID targetUUID) {
+        return this.punishmentDAO.getActiveWarnings(targetUUID);
+    }
+
+    public CompletableFuture<Integer> clearWarnings(UUID targetUUID, UUID staffUUID, String staffName, String reason) {
+        return this.punishmentDAO.deactivate(targetUUID, staffUUID, staffName,
+                reason != null ? reason : "已清除警告", PunishmentType.WARN, PunishmentType.TEMPWARN);
+    }
+
     public CompletableFuture<Optional<Punishment>> getActiveIpBan(String ipAddress) {
         String normalizedIp = this.normalizeIp(ipAddress);
         Optional<Punishment> cached = this.cacheManager.getActiveIpBan(normalizedIp);
@@ -236,13 +254,11 @@ public class PunishmentManager {
     public CompletableFuture<Optional<Punishment>> getActiveIpMute(String ipAddress) {
         String normalizedIp = this.normalizeIp(ipAddress);
         Optional<Punishment> cached = this.cacheManager.getActiveIpMute(normalizedIp);
-        if (cached != null && cached.isPresent()) {
+        if (cached != null) {
             return CompletableFuture.completedFuture(cached);
         }
         return this.punishmentDAO.getActiveIpMute(normalizedIp).thenApply(opt -> {
-            if (opt.isPresent()) {
-                this.cacheManager.cacheIpMute(normalizedIp, (Optional<Punishment>)opt);
-            }
+            this.cacheManager.cacheIpMute(normalizedIp, (Optional<Punishment>)opt);
             return opt;
         });
     }

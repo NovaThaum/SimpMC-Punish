@@ -53,6 +53,7 @@ public final class VelocityPunishmentRepository {
                   SUM(CASE WHEN active = 1 THEN 1 ELSE 0 END) AS active_count,
                   SUM(CASE WHEN type IN ('BAN', 'TEMPBAN', 'BANIP', 'TEMPBANIP') THEN 1 ELSE 0 END) AS ban_count,
                   SUM(CASE WHEN type IN ('MUTE', 'TEMPMUTE', 'MUTEIP', 'TEMPMUTEIP') THEN 1 ELSE 0 END) AS mute_count,
+                  SUM(CASE WHEN type IN ('WARN', 'TEMPWARN') THEN 1 ELSE 0 END) AS warning_count,
                   SUM(CASE WHEN type = 'KICK' THEN 1 ELSE 0 END) AS kick_count,
                   MAX(created_at) AS latest_at
                 FROM punishments
@@ -66,6 +67,7 @@ public final class VelocityPunishmentRepository {
                 stats.put("active", result.getLong("active_count"));
                 stats.put("bans", result.getLong("ban_count"));
                 stats.put("mutes", result.getLong("mute_count"));
+                stats.put("warnings", result.getLong("warning_count"));
                 stats.put("kicks", result.getLong("kick_count"));
                 long latestAt = result.getLong("latest_at");
                 stats.put("latestAt", result.wasNull() ? null : latestAt);
