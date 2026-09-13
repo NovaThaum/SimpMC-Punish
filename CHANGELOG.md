@@ -2,6 +2,13 @@
 
 本项目的版本更新遵循 [SimpMC-Punish 变更与版本规范](CONTRIBUTING.md)。
 
+## [3.3.1] - 2026-09-13
+
+### 移除
+
+- 移除 Discord Webhook 转发、后台批量发送任务及相关配置。
+- 移除 `behavior.vanilla-ban-components` 开关，Paper 与 Velocity 始终使用 Minecraft 原版可翻译封禁组件。
+
 ## [3.3.0] - 2026-09-13
 
 ### 新增

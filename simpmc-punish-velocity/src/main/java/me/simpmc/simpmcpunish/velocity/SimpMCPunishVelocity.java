@@ -175,10 +175,7 @@ public final class SimpMCPunishVelocity {
         try {
             VelocityConfiguration loaded = VelocityConfiguration.load(this.dataDirectory, this.logger);
             VelocityMessages messages = VelocityMessages.load(this.dataDirectory);
-            VelocityMessageRenderer messageRenderer = new VelocityMessageRenderer(
-                    messages,
-                    loaded.maxReasonLength(),
-                    loaded.vanillaBanComponents());
+            VelocityMessageRenderer messageRenderer = new VelocityMessageRenderer(messages, loaded.maxReasonLength());
             this.configuration = loaded;
             this.renderer = messageRenderer;
             VelocityDatabase loadedDatabase = new VelocityDatabase(loaded, this.logger);
@@ -197,10 +194,8 @@ public final class SimpMCPunishVelocity {
                 this.logger.info("SimpMC-Punish 管理面板已启动: http://{}:{}", loaded.webHost(), loaded.webPort());
             }
             this.logger.info("SimpMC-Punish Velocity 已启动，共享 MySQL 处罚同步已启用");
-            if (loaded.vanillaBanComponents()) {
-                this.logger.info("原版封禁组件已启用；如需在控制台查看其翻译键，"
-                        + "请保持 velocity.toml 的 log-player-connections=true。");
-            }
+            this.logger.info("原版封禁组件已启用；如需在控制台查看其翻译键，"
+                    + "请保持 velocity.toml 的 log-player-connections=true。");
         } catch (Exception error) {
             this.logger.error("SimpMC-Punish Velocity 初始化失败，插件保持 fail-open: {}", error.getMessage(), error);
         }

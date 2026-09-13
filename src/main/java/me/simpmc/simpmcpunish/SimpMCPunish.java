@@ -17,7 +17,6 @@ import me.simpmc.simpmcpunish.listeners.PunishmentListener;
 import me.simpmc.simpmcpunish.manager.PunishmentManager;
 import me.simpmc.simpmcpunish.scheduler.SchedulerManager;
 import me.simpmc.simpmcpunish.util.MessagesManager;
-import me.simpmc.simpmcpunish.webhook.DiscordWebhookManager;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,7 +28,6 @@ public final class SimpMCPunish extends JavaPlugin {
     private CacheManager cacheManager;
     private PunishmentManager punishmentManager;
     private PunishmentDAO punishmentDAO;
-    private DiscordWebhookManager webhookManager;
     private MessagesManager messagesManager;
     private PaperCommandManager commandManager;
     private EscalationCommandManager escalationCommandManager;
@@ -65,8 +63,6 @@ public final class SimpMCPunish extends JavaPlugin {
         this.getLogger().info("缓存已初始化");
         this.punishmentManager = new PunishmentManager(this, this.punishmentDAO, this.cacheManager);
         this.getLogger().info("处罚管理器已初始化");
-        this.webhookManager = new DiscordWebhookManager(this);
-        this.getLogger().info("Discord 通知管理器已初始化");
 
         this.registerCommands();
         this.escalationCommandManager = new EscalationCommandManager(this);
@@ -179,10 +175,6 @@ public final class SimpMCPunish extends JavaPlugin {
 
     public PaperCommandManager getCommandManager() {
         return this.commandManager;
-    }
-
-    public DiscordWebhookManager getWebhookManager() {
-        return this.webhookManager;
     }
 
     public MessagesManager getMessagesManager() {

@@ -11,7 +11,7 @@ class VelocityMessageRendererTest {
     @Test
     void auditReasonIsCollapsedToOneLineAndTruncated() {
         VelocityMessageRenderer renderer = new VelocityMessageRenderer(
-                new VelocityMessages("<red>ban</red>", "kick", "error"), 13, true);
+                new VelocityMessages("kick", "error"), 13);
 
         assertEquals("line one | l…", renderer.auditReason("line one\nline two"));
     }
@@ -19,7 +19,7 @@ class VelocityMessageRendererTest {
     @Test
     void temporaryBanUsesVanillaTranslationKeys() {
         VelocityMessageRenderer renderer = new VelocityMessageRenderer(
-                new VelocityMessages("unused", "kick", "error"), 240, true);
+                new VelocityMessages("kick", "error"), 240);
         PunishmentRecord punishment = new PunishmentRecord(
                 1,
                 UUID.randomUUID(),
@@ -39,7 +39,7 @@ class VelocityMessageRendererTest {
     @Test
     void temporaryIpBanUsesVanillaTranslationKeys() {
         VelocityMessageRenderer renderer = new VelocityMessageRenderer(
-                new VelocityMessages("unused", "kick", "error"), 240, true);
+                new VelocityMessages("kick", "error"), 240);
         PunishmentRecord punishment = new PunishmentRecord(
                 1,
                 UUID.randomUUID(),
@@ -56,25 +56,4 @@ class VelocityMessageRendererTest {
                 PlainTextComponentSerializer.plainText().serialize(renderer.banScreen(punishment)));
     }
 
-    @Test
-    void customBanScreenRemainsAvailableWhenVanillaComponentsAreDisabled() {
-        VelocityMessageRenderer renderer = new VelocityMessageRenderer(
-                new VelocityMessages("Banned <player>: <reason> by <staff> (<expires>)", "kick", "error"),
-                240,
-                false);
-        PunishmentRecord punishment = new PunishmentRecord(
-                1,
-                UUID.randomUUID(),
-                "player",
-                null,
-                "staff",
-                "BAN",
-                "test reason",
-                Instant.parse("2026-09-05T12:00:00Z"),
-                null);
-
-        assertEquals(
-                "Banned player: test reason by staff (永久)",
-                PlainTextComponentSerializer.plainText().serialize(renderer.banScreen(punishment)));
-    }
 }

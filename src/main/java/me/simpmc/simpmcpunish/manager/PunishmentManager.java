@@ -18,7 +18,6 @@ import me.simpmc.simpmcpunish.util.MessagesManager;
 import me.simpmc.simpmcpunish.util.TimeUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -63,7 +62,6 @@ public class PunishmentManager {
         return this.punishmentDAO.deactivate(targetUUID, staffUUID, staffName, reason != null ? reason : "已解除封禁", PunishmentType.BAN, PunishmentType.TEMPBAN).thenApply(count -> {
             if (count > 0) {
                 this.cacheManager.invalidateBan(targetUUID);
-                this.plugin.getWebhookManager().logUnban(targetName != null ? targetName : targetUUID.toString(), staffName);
                 return true;
             }
             return false;
@@ -89,7 +87,6 @@ public class PunishmentManager {
             if (uuidCount > 0 || ipCount > 0) {
                 this.cacheManager.invalidateBan(targetUUID);
                 this.cacheManager.invalidateIpBan(ipAddress);
-                this.plugin.getWebhookManager().logUnbanIp(ipAddress, targetName != null ? targetName : targetUUID.toString(), staffName);
                 return true;
             }
             return false;
@@ -106,7 +103,6 @@ public class PunishmentManager {
             this.cacheManager.cacheBan(targetUUID, Optional.of(uuidPunishment));
             this.cacheManager.cacheIpBan(normalizedIp, Optional.of(ipPunishment));
             this.kickIfOnline(targetUUID, targetName, staffName, ipType, reason, expiresAt);
-            this.plugin.getWebhookManager().logPunishment(ipPunishment);
             return ipPunishment;
         });
     }
@@ -131,7 +127,6 @@ public class PunishmentManager {
             this.cacheManager.cacheMute(targetUUID, Optional.of(uuidPunishment));
             this.cacheManager.cacheIpMute(normalizedIp, Optional.of(ipPunishment));
             this.notifyMute(targetUUID, targetName, staffName, reason, expiresAt);
-            this.plugin.getWebhookManager().logPunishment(ipPunishment);
             return ipPunishment;
         });
     }
@@ -145,7 +140,6 @@ public class PunishmentManager {
             if (uuidCount > 0 || ipCount > 0) {
                 this.cacheManager.invalidateMute(targetUUID);
                 this.cacheManager.invalidateIpMute(ipAddress);
-                this.plugin.getWebhookManager().logUnmuteIp(ipAddress, targetName != null ? targetName : targetUUID.toString(), staffName);
                 return true;
             }
             return false;
@@ -187,7 +181,6 @@ public class PunishmentManager {
         return this.punishmentDAO.deactivate(targetUUID, staffUUID, staffName, reason != null ? reason : "已解除禁言", PunishmentType.MUTE, PunishmentType.TEMPMUTE).thenApply(count -> {
             if (count > 0) {
                 this.cacheManager.invalidateMute(targetUUID);
-                this.plugin.getWebhookManager().logUnmute(targetName != null ? targetName : targetUUID.toString(), staffName);
                 return true;
             }
             return false;
@@ -211,7 +204,6 @@ public class PunishmentManager {
             punishment.setSourceCommand(sourceCommand);
             return this.punishmentDAO.insert(punishment).thenApply(id -> {
                 punishment.setId(id);
-                this.plugin.getWebhookManager().logPunishment(punishment);
                 Component kickMessage = this.buildDisconnectMessage(targetName, staffName, PunishmentType.KICK, reason, null);
                 this.kickPlayer(target, kickMessage);
                 return punishment;
@@ -309,7 +301,6 @@ public class PunishmentManager {
                 this.cacheManager.cacheIpMute(ipAddress, Optional.of(punishment));
                 this.notifyMute(targetUUID, targetName, staffName, reason, expiresAt);
             }
-            this.plugin.getWebhookManager().logPunishment(punishment);
             return punishment;
         });
     }
@@ -331,7 +322,6 @@ public class PunishmentManager {
                 this.cacheManager.cacheMute(targetUUID, Optional.of(punishment));
                 this.notifyMute(targetUUID, targetName, staffName, reason, expiresAt);
             }
-            this.plugin.getWebhookManager().logPunishment(punishment);
             return punishment;
         });
     }
@@ -366,36 +356,14 @@ public class PunishmentManager {
         }
     }
 
-    public String buildKickMessage(String playerName, String staffName, PunishmentType type, String reason, Instant expiresAt) {
-        String template = type == PunishmentType.KICK ? this.msg().getMessage("punishments.kick.screen") : this.msg().getMessage("punishments.ban.screen");
-        return template.replace("{reason}", reason != null ? reason : "未填写原因")
-                .replace("{expires}", TimeUtil.formatRemaining(expiresAt))
-                .replace("{player}", playerName != null ? playerName : "未知玩家")
-                .replace("{staff}", staffName != null ? staffName : "控制台");
-    }
-
     public Component buildDisconnectMessage(String playerName, String staffName, PunishmentType type, String reason, Instant expiresAt) {
-        if (this.usesVanillaBanComponents()) {
-            if (type == PunishmentType.KICK) {
-                return MessageUtil.toKickDisconnectComponent(reason);
-            }
-            if (type.preventsLogin()) {
-                return MessageUtil.toBanDisconnectComponent(reason, expiresAt, type.isIpBan());
-            }
+        if (type == PunishmentType.KICK) {
+            return MessageUtil.toKickDisconnectComponent(reason);
         }
-        return MessageUtil.toComponent(this.buildKickMessage(playerName, staffName, type, reason, expiresAt));
-    }
-
-    private boolean usesVanillaBanComponents() {
-        return usesVanillaBanComponents(this.plugin.getConfig());
-    }
-
-    static boolean usesVanillaBanComponents(Configuration config) {
-        String path = "behavior.vanilla-ban-components";
-        if (!config.contains(path, true)) {
-            return false;
+        if (type.preventsLogin()) {
+            return MessageUtil.toBanDisconnectComponent(reason, expiresAt, type.isIpBan());
         }
-        return config.getBoolean(path);
+        return MessageUtil.toComponent("未定义的断开消息");
     }
 }
 

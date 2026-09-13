@@ -2,16 +2,6 @@ prefix: "&8[&c&lSimpMC-Punish&8]&r "
 
 punishments:
   ban:
-    # behavior.vanilla-ban-components=false 时使用此模板。
-    screen: |-
-      &c&l你已被封禁
-
-      &7玩家: &f{player}
-      &7执行者: &f{staff}
-      &7原因: &f{reason}
-      &7到期: &f{expires}
-
-      &7如需申诉，请联系服务器管理组。
     broadcast:
       enabled: true
       message: "&c{staff} &7封禁了 &c{player} &7原因: &f{reason} &7({duration})"
@@ -66,11 +56,6 @@ punishments:
     success: "&a已解除 {player} 的禁言"
 
   kick:
-    screen: |-
-      &6&l你已被踢出服务器
-
-      &7执行者: &f{staff}
-      &7原因: &f{reason}
     broadcast:
       enabled: true
       message: "&9{staff} &7踢出了 &9{player} &7原因: &f{reason}"

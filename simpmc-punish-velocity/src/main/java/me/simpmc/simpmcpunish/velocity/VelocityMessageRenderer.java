@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 public final class VelocityMessageRenderer {
@@ -20,29 +19,14 @@ public final class VelocityMessageRenderer {
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
     private final VelocityMessages messages;
     private final int maxReasonLength;
-    private final boolean vanillaBanComponents;
 
     public VelocityMessageRenderer(VelocityMessages messages, int maxReasonLength) {
-        this(messages, maxReasonLength, true);
-    }
-
-    public VelocityMessageRenderer(VelocityMessages messages, int maxReasonLength, boolean vanillaBanComponents) {
         this.messages = Objects.requireNonNull(messages, "messages");
         this.maxReasonLength = maxReasonLength;
-        this.vanillaBanComponents = vanillaBanComponents;
     }
 
     public Component banScreen(PunishmentRecord punishment) {
         String reason = truncate(punishment.reason() == null ? "未填写原因" : punishment.reason());
-        if (!this.vanillaBanComponents) {
-            String player = punishment.targetName() == null ? "未知玩家" : punishment.targetName();
-            String staff = punishment.staffName() == null ? "控制台" : punishment.staffName();
-            return this.miniMessage.deserialize(this.messages.banScreen(),
-                    Placeholder.unparsed("player", player),
-                    Placeholder.unparsed("staff", staff),
-                    Placeholder.unparsed("reason", reason),
-                    Placeholder.unparsed("expires", formatRemaining(punishment.expiresAt())));
-        }
         String keyPrefix = punishment.isIpBan()
                 ? "multiplayer.disconnect.banned_ip"
                 : "multiplayer.disconnect.banned";

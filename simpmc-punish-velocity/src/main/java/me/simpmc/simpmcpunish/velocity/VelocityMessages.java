@@ -10,7 +10,7 @@ import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
-public record VelocityMessages(String banScreen, String kickFallback, String databaseError) {
+public record VelocityMessages(String kickFallback, String databaseError) {
     public static VelocityMessages load(Path dataDirectory) throws IOException {
         Path file = dataDirectory.resolve("messages.yml");
         if (!Files.exists(file)) {
@@ -27,7 +27,6 @@ public record VelocityMessages(String banScreen, String kickFallback, String dat
             Object loaded = yaml.load(input);
             Map<?, ?> values = loaded instanceof Map<?, ?> map ? map : Collections.emptyMap();
             return new VelocityMessages(
-                    value(values, "ban-screen", "<red>你已被封禁。</red>"),
                     value(values, "kick-fallback", "<red>你已被后端服务器踢出。</red>"),
                     value(values, "database-error", "<red>处罚数据库暂时不可用，请稍后重试。</red>"));
         }

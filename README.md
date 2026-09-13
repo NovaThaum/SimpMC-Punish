@@ -4,7 +4,7 @@ SimpMC-Punish 是面向 Minecraft 服务器的处罚管理插件，作者为 GPT
 
 本仓库包含两个运行组件：
 
-- Paper/Folia 插件：负责处罚写入、管理命令、历史记录、菜单界面、数据库和 Discord 通知。
+- Paper/Folia 插件：负责处罚写入、管理命令、历史记录、菜单界面和数据库。
 - Velocity 插件：只读共享 MySQL，负责全网封禁同步、后端 kick 处理和内嵌管理网页。
 
 ## 查看封禁列表
@@ -41,14 +41,7 @@ multiplayer.disconnect.banned.reasonmultiplayer.disconnect.banned.expiration
 
 这是代理端对原版翻译组件的纯文本表示；玩家客户端仍会按自身语言显示实际的封禁原因和到期时间。永久玩家封禁和踢出只包含 `multiplayer.disconnect.banned.reason`，踢出不会追加到期翻译键。
 
-为避免升级时静默覆盖已有自定义封禁页，旧版 `config.yml` 若没有下面这个配置项，会继续使用 `messages.yml` 中的原有模板。要启用原版组件，请在 Paper 和 Velocity 两端各自的 `config.yml` 中添加：
-
-```yaml
-behavior:
-  vanilla-ban-components: true
-```
-
-设为 `false` 可随时恢复对应 `messages.yml` 中的自定义封禁页和踢出页。
+封禁和踢出始终使用 Minecraft 原版可翻译组件，不再提供切换到自定义断开页面的配置项。旧配置中的 `behavior.vanilla-ban-components` 和自定义封禁页字段会被忽略。
 
 处罚执行广播默认发送给所有在线玩家。被禁言的玩家尝试发言时，会收到发言被禁止的提示，并看到禁言原因和剩余时间。
 

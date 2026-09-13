@@ -7,12 +7,6 @@
 bypass:
   permission: "simpmc-punish.bypass"
 
-# 封禁断开页
-behavior:
-  # true: 封禁与踢出都使用 Minecraft 原版可翻译组件；Velocity 连接日志会显示原版翻译键。
-  # false: 继续使用 messages.yml 中可自定义的 punishments.ban.screen 与 punishments.kick.screen。
-  vanilla-ban-components: true
-
 # 数据库配置
 # Velocity 全网部署必须使用 MySQL；SQLite 仅保留给不安装 Velocity 的单服部署。
 database:
@@ -56,13 +50,6 @@ durations:
     - "7d"
     - "30d"
     - "90d"
-
-# Discord 通知配置
-# 开启后会把处罚记录发送到指定 Discord 频道。
-discord:
-  enabled: false
-  notification-url: "请填写 Discord 通知地址"
-  batch-interval-seconds: 5
 
 # 按玩家被该自定义命令处罚的历史次数递进执行处罚。
 # steps 从第 1 次开始匹配；超过最后一档后继续使用最后一档。
