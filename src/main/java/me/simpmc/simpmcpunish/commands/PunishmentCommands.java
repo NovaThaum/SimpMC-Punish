@@ -558,6 +558,7 @@ extends BaseCommand {
         this.plugin.reloadConfig();
         this.plugin.getMessagesManager().reload();
         this.plugin.getCacheManager().clear();
+        this.plugin.reloadEscalationCommands();
         sender.sendMessage(MessageUtil.toComponent("&aSimpMC-Punish 配置已重载。"));
     }
 

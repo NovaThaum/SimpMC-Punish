@@ -75,8 +75,8 @@ public class PunishmentDAO {
 
     private int insert(Connection conn, Punishment punishment) throws SQLException {
         String sql = "INSERT INTO punishments "
-            + "(target_uuid, target_name, target_ip, staff_uuid, staff_name, type, reason, created_at, expires_at, active) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "(target_uuid, target_name, target_ip, staff_uuid, staff_name, type, reason, source_command, created_at, expires_at, active) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, punishment.getTargetUUID() != null ? punishment.getTargetUUID().toString() : null);
@@ -86,13 +86,14 @@ public class PunishmentDAO {
             stmt.setString(5, punishment.getStaffName());
             stmt.setString(6, punishment.getType().name());
             stmt.setString(7, punishment.getReason());
-            stmt.setLong(8, punishment.getCreatedAt().toEpochMilli());
+            stmt.setString(8, punishment.getSourceCommand());
+            stmt.setLong(9, punishment.getCreatedAt().toEpochMilli());
             if (punishment.getExpiresAt() == null) {
-                stmt.setNull(9, Types.BIGINT);
+                stmt.setNull(10, Types.BIGINT);
             } else {
-                stmt.setLong(9, punishment.getExpiresAt().toEpochMilli());
+                stmt.setLong(10, punishment.getExpiresAt().toEpochMilli());
             }
-            stmt.setInt(10, punishment.isActive() ? 1 : 0);
+            stmt.setInt(11, punishment.isActive() ? 1 : 0);
             stmt.executeUpdate();
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
@@ -251,6 +252,24 @@ public class PunishmentDAO {
                 }
             } catch (SQLException e) {
                 this.plugin.getLogger().log(Level.SEVERE, "读取处罚编号失败", e);
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    public CompletableFuture<Integer> countBySourceCommand(UUID targetUUID, String sourceCommand) {
+        return CompletableFuture.supplyAsync(() -> {
+            String sql = "SELECT COUNT(*) FROM punishments WHERE target_uuid = ? AND source_command = ?";
+
+            try (Connection conn = this.databaseManager.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, targetUUID.toString());
+                stmt.setString(2, sourceCommand);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    return rs.next() ? rs.getInt(1) : 0;
+                }
+            } catch (SQLException e) {
+                this.plugin.getLogger().log(Level.SEVERE, "统计自定义处罚命令次数失败", e);
                 throw new RuntimeException(e);
             }
         });
@@ -488,6 +507,7 @@ public class PunishmentDAO {
         p.setStaffName(rs.getString("staff_name"));
         p.setType(PunishmentType.valueOf(rs.getString("type")));
         p.setReason(rs.getString("reason"));
+        p.setSourceCommand(rs.getString("source_command"));
         p.setCreatedAt(Instant.ofEpochMilli(rs.getLong("created_at")));
         long expiresAt = rs.getLong("expires_at");
         p.setExpiresAt(rs.wasNull() ? null : Instant.ofEpochMilli(expiresAt));

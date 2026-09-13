@@ -63,3 +63,19 @@ discord:
   enabled: false
   notification-url: "请填写 Discord 通知地址"
   batch-interval-seconds: 5
+
+# 按玩家被该自定义命令处罚的历史次数递进执行处罚。
+# steps 从第 1 次开始匹配；超过最后一档后继续使用最后一档。
+# 可用动作: kick、ban、tempban、mute、tempmute、warn、tempwarn。
+# 推荐动作只写要替换的指令前缀，玩家和原因会自动继承；也兼容 {player}、{reason} 或 <player>、<reason> 占位符。
+escalation:
+  commands:
+    punish1:
+      enabled: false
+      permission: "simpmc-punish.escalation.punish1"
+      description: "按次数递进处罚"
+      usage: "/punish1 <玩家> [原因]"
+      steps:
+        1: "kick"
+        2: "tempban 1h"
+        3: "ban"

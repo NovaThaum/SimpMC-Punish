@@ -133,6 +133,9 @@ errors:
   invalid-duration: "&c时长格式无效！示例: 1h, 30m, 7d。"
   no-permission: "&c你没有权限执行该操作。"
 
+escalation:
+  applied: "&e{staff} &7通过 &e/{command} &7第 &f{count} &7次处罚了 &e{player} &7：&c{punishment}"
+
 warnings:
   header: "&8&m---------------- &e&l{player} 的当前警告 &8&m---------------- &7共 {total} 条"
   entry:

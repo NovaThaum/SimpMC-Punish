@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import me.simpmc.simpmcpunish.cache.CacheManager;
 import me.simpmc.simpmcpunish.commands.PunishmentCommands;
+import me.simpmc.simpmcpunish.commands.EscalationCommandManager;
 import me.simpmc.simpmcpunish.database.DatabaseManager;
 import me.simpmc.simpmcpunish.database.PunishmentDAO;
 import me.simpmc.simpmcpunish.gui.DurationGUI;
@@ -31,6 +32,7 @@ public final class SimpMCPunish extends JavaPlugin {
     private DiscordWebhookManager webhookManager;
     private MessagesManager messagesManager;
     private PaperCommandManager commandManager;
+    private EscalationCommandManager escalationCommandManager;
 
     @Override
     public void onEnable() {
@@ -67,6 +69,8 @@ public final class SimpMCPunish extends JavaPlugin {
         this.getLogger().info("Discord 通知管理器已初始化");
 
         this.registerCommands();
+        this.escalationCommandManager = new EscalationCommandManager(this);
+        this.escalationCommandManager.reload();
         this.getLogger().info("命令已注册");
         this.registerListeners();
         this.getLogger().info("监听器已注册");
@@ -85,6 +89,9 @@ public final class SimpMCPunish extends JavaPlugin {
         }
         if (this.databaseManager != null) {
             this.databaseManager.shutdown();
+        }
+        if (this.escalationCommandManager != null) {
+            this.escalationCommandManager.unregisterAll();
         }
         if (this.cacheManager != null) {
             this.cacheManager.clear();
@@ -133,6 +140,12 @@ public final class SimpMCPunish extends JavaPlugin {
         this.commandManager.getCommandCompletions()
                 .registerAsyncCompletion("players", c -> this.getServer().getOnlinePlayers().stream().map(p -> p.getName()).toList());
         this.commandManager.registerCommand(new PunishmentCommands(this));
+    }
+
+    public void reloadEscalationCommands() {
+        if (this.escalationCommandManager != null) {
+            this.escalationCommandManager.reload();
+        }
     }
 
     private void registerListeners() {

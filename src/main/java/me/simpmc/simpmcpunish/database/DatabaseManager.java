@@ -110,22 +110,42 @@ public class DatabaseManager {
         return config;
     }
 
-    private void initializeTables() {
+    private void initializeTables() throws SQLException {
         String autoIncrement = this.databaseType.equals("mysql") ? "AUTO_INCREMENT" : "AUTOINCREMENT";
         String textType = this.databaseType.equals("mysql") ? "VARCHAR(255)" : "TEXT";
         String bigintType = this.databaseType.equals("mysql") ? "BIGINT" : "INTEGER";
-        String createPunishmentsTable = String.format("    CREATE TABLE IF NOT EXISTS punishments (\n        id INTEGER PRIMARY KEY %s,\n        target_uuid %s NOT NULL,\n        target_name %s NOT NULL,\n        target_ip %s,\n        staff_uuid %s,\n        staff_name %s NOT NULL,\n        type %s NOT NULL,\n        reason TEXT,\n        created_at %s NOT NULL,\n        expires_at %s,\n        active TINYINT NOT NULL DEFAULT 1,\n        removed_by_uuid %s,\n        removed_by_name %s,\n        removed_at %s,\n        remove_reason TEXT\n    )\n", autoIncrement, textType, textType, textType, textType, textType, textType, bigintType, bigintType, textType, textType, bigintType);
+        String createPunishmentsTable = String.format("    CREATE TABLE IF NOT EXISTS punishments (\n        id INTEGER PRIMARY KEY %s,\n        target_uuid %s NOT NULL,\n        target_name %s NOT NULL,\n        target_ip %s,\n        staff_uuid %s,\n        staff_name %s NOT NULL,\n        type %s NOT NULL,\n        reason TEXT,\n        source_command %s,\n        created_at %s NOT NULL,\n        expires_at %s,\n        active TINYINT NOT NULL DEFAULT 1,\n        removed_by_uuid %s,\n        removed_by_name %s,\n        removed_at %s,\n        remove_reason TEXT\n    )\n", autoIncrement, textType, textType, textType, textType, textType, textType, textType, bigintType, bigintType, textType, textType, bigintType);
         String createPlayerIpsTable = String.format("    CREATE TABLE IF NOT EXISTS player_ips (\n        uuid %s PRIMARY KEY,\n        name %s NOT NULL,\n        ip_address %s NOT NULL,\n        last_seen %s NOT NULL\n    )\n", textType, textType, textType, bigintType);
-        ((CompletableFuture)((CompletableFuture)this.executeAsync(createPunishmentsTable).thenCompose(v -> this.executeAsync(createPlayerIpsTable))).thenAccept(v -> {
-            this.createIndexSafe("idx_punishments_target_uuid", "punishments", "target_uuid");
-            this.createIndexSafe("idx_punishments_active", "punishments", "active, type");
-            this.createIndexSafe("idx_punishments_expires", "punishments", "expires_at");
-            this.createIndexSafe("idx_punishments_target_ip", "punishments", "target_ip");
-            this.createIndexSafe("idx_punishments_banlist_page", "punishments", "active, created_at, id, type, expires_at");
-        })).exceptionally(e -> {
-            this.plugin.getLogger().log(Level.SEVERE, "初始化数据库表失败", (Throwable)e);
-            return null;
-        });
+        try (Connection conn = this.getConnection()) {
+            this.execute(conn, createPunishmentsTable);
+            this.execute(conn, createPlayerIpsTable);
+        }
+        this.ensureSourceCommandColumn(textType);
+        this.createIndexSafe("idx_punishments_target_uuid", "punishments", "target_uuid");
+        this.createIndexSafe("idx_punishments_active", "punishments", "active, type");
+        this.createIndexSafe("idx_punishments_expires", "punishments", "expires_at");
+        this.createIndexSafe("idx_punishments_target_ip", "punishments", "target_ip");
+        this.createIndexSafe("idx_punishments_banlist_page", "punishments", "active, created_at, id, type, expires_at");
+    }
+
+    private void ensureSourceCommandColumn(String textType) throws SQLException {
+        String sql = "ALTER TABLE punishments ADD COLUMN source_command " + textType;
+        try (Connection conn = this.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
+        } catch (SQLException exception) {
+            String message = exception.getMessage();
+            String normalizedMessage = message != null ? message.toLowerCase() : "";
+            if (!normalizedMessage.contains("duplicate") && !normalizedMessage.contains("exists") && !normalizedMessage.contains("already")) {
+                throw exception;
+            }
+        }
+    }
+
+    private void execute(Connection conn, String sql) throws SQLException {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.execute();
+        }
     }
 
     private void createIndexSafe(String indexName, String tableName, String columns) {

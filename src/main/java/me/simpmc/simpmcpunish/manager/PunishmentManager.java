@@ -170,6 +170,18 @@ public class PunishmentManager {
         return this.createPunishment(targetUUID, targetName, staffUUID, staffName, PunishmentType.TEMPWARN, reason, expiresAt);
     }
 
+    public CompletableFuture<Punishment> executeConfiguredPunishment(UUID targetUUID, String targetName, UUID staffUUID, String staffName,
+                                                                       PunishmentType type, long durationMillis, String reason, String sourceCommand) {
+        return switch (type) {
+            case BAN -> this.createPunishment(targetUUID, targetName, staffUUID, staffName, type, reason, null, sourceCommand);
+            case TEMPBAN, TEMPMUTE, TEMPWARN -> this.createPunishment(targetUUID, targetName, staffUUID, staffName, type, reason,
+                TimeUtil.getExpiryInstant(durationMillis), sourceCommand);
+            case MUTE, WARN -> this.createPunishment(targetUUID, targetName, staffUUID, staffName, type, reason, null, sourceCommand);
+            case KICK -> this.createKick(targetUUID, targetName, staffUUID, staffName, reason, sourceCommand);
+            default -> CompletableFuture.failedFuture(new IllegalArgumentException("不支持的自定义处罚类型: " + type));
+        };
+    }
+
     public CompletableFuture<Boolean> unmute(UUID targetUUID, UUID staffUUID, String staffName, String reason) {
         String targetName = Bukkit.getOfflinePlayer((UUID)targetUUID).getName();
         return this.punishmentDAO.deactivate(targetUUID, staffUUID, staffName, reason != null ? reason : "已解除禁言", PunishmentType.MUTE, PunishmentType.TEMPMUTE).thenApply(count -> {
@@ -183,18 +195,27 @@ public class PunishmentManager {
     }
 
     public CompletableFuture<Boolean> kick(UUID targetUUID, String targetName, UUID staffUUID, String staffName, String reason) {
-        return CompletableFuture.supplyAsync(() -> {
-            Player target = Bukkit.getPlayer((UUID)targetUUID);
+        return this.createKick(targetUUID, targetName, staffUUID, staffName, reason, null)
+            .thenApply(punishment -> true)
+            .exceptionally(exception -> false);
+    }
+
+    private CompletableFuture<Punishment> createKick(UUID targetUUID, String targetName, UUID staffUUID, String staffName,
+                                                      String reason, String sourceCommand) {
+        return CompletableFuture.supplyAsync(() -> Bukkit.getPlayer((UUID)targetUUID)).thenCompose(target -> {
             if (target == null || !target.isOnline()) {
-                return false;
+                return CompletableFuture.failedFuture(new IllegalStateException("玩家当前不在线"));
             }
             Punishment punishment = new Punishment(targetUUID, targetName, staffUUID, staffName, PunishmentType.KICK, reason, Instant.now(), Instant.now());
             punishment.setActive(false);
-            this.punishmentDAO.insert(punishment);
-            this.plugin.getWebhookManager().logPunishment(punishment);
-            Component kickMessage = this.buildDisconnectMessage(targetName, staffName, PunishmentType.KICK, reason, null);
-            this.kickPlayer(target, kickMessage);
-            return true;
+            punishment.setSourceCommand(sourceCommand);
+            return this.punishmentDAO.insert(punishment).thenApply(id -> {
+                punishment.setId(id);
+                this.plugin.getWebhookManager().logPunishment(punishment);
+                Component kickMessage = this.buildDisconnectMessage(targetName, staffName, PunishmentType.KICK, reason, null);
+                this.kickPlayer(target, kickMessage);
+                return punishment;
+            });
         });
     }
 
@@ -226,6 +247,10 @@ public class PunishmentManager {
 
     public CompletableFuture<Optional<Punishment>> getPunishmentById(int id) {
         return this.punishmentDAO.getById(id);
+    }
+
+    public CompletableFuture<Integer> countBySourceCommand(UUID targetUUID, String sourceCommand) {
+        return this.punishmentDAO.countBySourceCommand(targetUUID, sourceCommand);
     }
 
     public CompletableFuture<List<Punishment>> getActiveWarnings(UUID targetUUID) {
@@ -290,7 +315,13 @@ public class PunishmentManager {
     }
 
     private CompletableFuture<Punishment> createPunishment(UUID targetUUID, String targetName, UUID staffUUID, String staffName, PunishmentType type, String reason, Instant expiresAt) {
+        return this.createPunishment(targetUUID, targetName, staffUUID, staffName, type, reason, expiresAt, null);
+    }
+
+    private CompletableFuture<Punishment> createPunishment(UUID targetUUID, String targetName, UUID staffUUID, String staffName,
+                                                            PunishmentType type, String reason, Instant expiresAt, String sourceCommand) {
         Punishment punishment = new Punishment(targetUUID, targetName, staffUUID, staffName, type, reason, Instant.now(), expiresAt);
+        punishment.setSourceCommand(sourceCommand);
         return this.punishmentDAO.insert(punishment).thenApply(id -> {
             punishment.setId((int)id);
             if (type.isBan()) {

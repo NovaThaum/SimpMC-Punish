@@ -13,6 +13,7 @@ public class Punishment {
     private String staffName;
     private PunishmentType type;
     private String reason;
+    private String sourceCommand;
     private Instant createdAt;
     private Instant expiresAt;
     private boolean active;
@@ -103,6 +104,14 @@ public class Punishment {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public String getSourceCommand() {
+        return this.sourceCommand;
+    }
+
+    public void setSourceCommand(String sourceCommand) {
+        this.sourceCommand = sourceCommand;
     }
 
     public Instant getCreatedAt() {

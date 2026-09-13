@@ -54,6 +54,22 @@ behavior:
 
 插件支持 `/warn <玩家> [原因]`、`/tempwarn <玩家> <时长> [原因]` 和 `/warnings <玩家>` 管理警告记录。警告会进入处罚历史，并根据配置广播给所有在线玩家。
 
+插件支持配置按处罚次数递进的自定义命令。例如在 `config.yml` 中启用下面的配置后，第一次执行 `/punish1 Steve 原因` 会踢出玩家，第二次会临时封禁 1 小时，第三次及以后会永久封禁：
+
+```yaml
+escalation:
+  commands:
+    punish1:
+      enabled: true
+      permission: "simpmc-punish.escalation.punish1"
+      steps:
+        1: "kick"
+        2: "tempban 1h"
+        3: "ban"
+```
+
+`steps` 前面的数字就是执行该自定义命令的次数，从 `1` 开始；超过最后一档后继续使用最后一档。步骤内容只需写要替换的指令前缀，玩家和原因会自动继承，例如第 2 次会将 `/punish1 Steve 原因` 转换为 `tempban 1h Steve 原因`。也可以使用 `kick {player} {reason}` 或 `kick <player> <reason>` 这种完整写法。每个自定义命令的次数单独保存在处罚数据库中，不依赖内存。支持 `kick`、`ban`、`tempban`、`mute`、`tempmute`、`warn` 和 `tempwarn`。修改配置后执行 `/simpunish 重载` 即可重新注册命令。
+
 启用多个 Paper/Folia 后端时，禁言缓存默认每 5 秒重新同步一次共享数据库，因此在一个后端解除禁言后，其他后端通常会在 5 秒内同步解除状态。缓存未命中时，聊天监听器也会回查共享数据库。可通过 `cache.mute-expiry-seconds` 和 `cache.mute-check-timeout-ms` 调整同步周期与查询等待时间。
 
 如果数据库连接失败，Paper 插件会记录初始化原因并自动停用，不会继续注册封禁登录检查，也不会为每次玩家登录重复打印“数据库尚未初始化”。修正数据库地址、端口、库名、账号或密码后重启服务器即可。
